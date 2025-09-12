@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ultimate Food Game — All In One + Dev Mode</title>
+<style>
+/* ---------- base / themes ---------- */
+*{box-sizing:border-box}
+:root{
+  --bg:#000000;
+  --bg-overlay:0.10; /* overlay alpha on top of solid black */
+  --fg:#ffffff;
+  --card-bg:rgba(0,0,0,0.75);
+  --accent:#ffd27f;
+  --muted:rgba(255,255,255,0.06);
+  --panel-w:360px;
+  --glass: rgba(255,255,255,0.03);
+  --ui-glow: 0 8px 30px rgba(255,210,127,0.12);
+  --progress-h:14px;
+}
+
+/* Theme modifiers (applied to body.data-theme-*) */
+body { margin:0;font-family:Inter,Arial,Helvetica,sans-serif; background:var(--bg); color:var(--fg); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:12px; overflow-x:hidden; position:relative; transition:background .5s, color .3s; }
+body.theme-aero-blue { --bg: linear-gradient(180deg, #081229 0%, #041428 100%); --accent: #6fd3ff; --fg: #eaf6ff; --card-bg: rgba(4,20,40,0.75); --muted: rgba(110,211,255,0.05); }
+body.theme-aero-green { --bg: linear-gradient(180deg,#03210b 0%,#063217 100%); --accent: #8ef09a; --fg:#ecfff0; --card-bg: rgba(2,30,10,0.7); --muted: rgba(142,240,154,0.04); }
+body.theme-golden { --bg: linear-gradient(180deg,#2b1b00 0%,#000000 100%); --accent: #ffd700; --fg:#100800; --card-bg: rgba(0,0,0,0.65); --muted: rgba(255,215,0,0.03); }
+
+/* overlay */
+#bgOverlay{ position:fixed; inset:0; pointer-events:none; background:rgba(0,0,0,var(--bg-overlay)); z-index:0; transition:background .2s; }
+
+/* wrapper */
+#app{ width:100%; max-width:1100px; z-index:2; }
+
+/* header */
+h1{ margin:10px 0 14px; text-align:center; font-size:20px; letter-spacing:0.2px; }
+
+/* layout */
+.container{ display:grid; grid-template-columns:1fr var(--panel-w); gap:12px; width:100%; }
+@media(max-width:980px){ .container{ grid-template-columns:1fr } }
+
+/* cards */
+.card{ background:var(--card-bg); border:2px solid rgba(255,255,255,0.04); border-radius:12px; padding:12px; margin-bottom:12px; backdrop-filter:blur(6px); box-shadow:var(--ui-glow); transition:transform .25s ease, box-shadow .25s ease; }
+.card:active{ transform:scale(.997); }
+.controls{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:8px; }
+.btn{ background:transparent; color:var(--fg); border:2px solid var(--accent); padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:700; transition:all .18s; }
+.btn:hover{ background:var(--accent); color:var(--bg); transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+.small{ font-size:13px; color:var(--fg) }
+
+/* result & log */
+#result{ font-size:16px; text-align:center; padding:14px; border-radius:10px; margin-bottom:8px; background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); font-weight:800; letter-spacing:0.3px; }
+#log{ max-height:220px; overflow:auto; padding:8px; border-radius:8px; background:var(--muted); font-size:13px; transition:max-height .25s; }
+.log-row{ display:flex; gap:8px; align-items:center; margin:6px 0; opacity:0; animation:fadeInUp .35s forwards; }
+@keyframes fadeInUp{ from{transform:translateY(6px); opacity:0} to{transform:none; opacity:1} }
+.log-dot{ width:10px; height:10px; border-radius:50%; flex:0 0 10px; }
+.secret{ color:#ff77ff; font-weight:700 }
+.legendary{ color:gold; font-weight:700 }
+
+/* panel right */
+.panel{ display:flex; flex-direction:column; height:100%; }
+.panel .tabs{ display:flex; gap:6px; margin-bottom:8px; }
+.tab{ flex:1; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); text-align:center; cursor:pointer; background:transparent; color:var(--fg); font-weight:700; transition:all .18s; }
+.tab.active{ background:var(--accent); color:var(--bg); box-shadow:0 8px 20px rgba(0,0,0,0.12); transform:translateY(-2px); }
+.panel .panel-body{ overflow:auto; padding:8px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:8px; min-height:420px; }
+
+/* dex grid */
+.dex-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:8px; }
+.dex-item{ display:flex; flex-direction:column; align-items:center; padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); text-align:center; transition:transform .22s, box-shadow .22s; }
+.dex-item.locked { filter:grayscale(.8) contrast(.9) brightness(.8) opacity(.85); transform:scale(.995); }
+.dex-item:hover{ transform:translateY(-6px); box-shadow:var(--ui-glow); }
+.dex-emoji{ font-size:28px; margin-bottom:6px; display:flex; align-items:center; justify-content:center; }
+.dex-name{ font-size:13px; word-break:break-word; font-weight:700 }
+
+/* achievements */
+.ach-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; }
+.ach-card{ padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); text-align:center; transition:transform .18s; }
+.ach-card.unlocked{ border:1px dashed rgba(255,255,255,0.04); }
+
+/* combos */
+.combo-card{ padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); margin-bottom:8px; transition:transform .18s; }
+.combo-card:hover{ transform:translateY(-6px); }
+.combo-req{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:6px; }
+.combo-result{ font-weight:800 }
+
+/* drop rates / pity tab */
+.rates-list{ display:flex; flex-direction:column; gap:10px; }
+.rate-row{ display:flex; flex-direction:column; gap:6px; }
+.rate-title{ display:flex; justify-content:space-between; align-items:center; font-weight:800; }
+.progress-track{ width:100%; height:var(--progress-h); background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border-radius:10px; overflow:hidden; border:1px solid rgba(255,255,255,0.04); }
+.progress-fill{ height:100%; width:0%; transition:width .8s cubic-bezier(.2,.9,.2,1); }
+
+/* animated special fills */
+.fill-mythic{ background: linear-gradient(90deg,#7f5af0,#ef6fff,#5be3ff); animation:glowPulse 2.6s infinite; }
+.fill-secret{ background: linear-gradient(90deg, #ff4d6d, #ff9a9e); box-shadow: inset 0 -6px 30px rgba(0,0,0,0.25); animation:glowPulse 2.6s infinite; }
+@keyframes glowPulse{ 0%{filter:brightness(1)}50%{filter:brightness(1.12)}100%{filter:brightness(1)} }
+
+/* rainbow border for mythic progress */
+.progress-wrap{ position:relative; border-radius:10px; padding:4px; background:linear-gradient(90deg,#7f5af0,#ef6fff,#5be3ff 60%); }
+
+/* small preview boxes in settings */
+.preview-row{ display:flex; gap:8px; align-items:center; margin-top:8px; }
+.preview-mini{ width:120px; height:56px; border-radius:8px; padding:6px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; font-size:12px; color:#000; box-shadow:0 8px 18px rgba(0,0,0,0.12); transform:translateY(0); transition:transform .2s; }
+.preview-mini:hover{ transform:translateY(-6px); }
+
+/* floating elements & confetti */
+#floatArea{ position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.float-emoji{ position:absolute; font-size:22px; opacity:0.95; will-change:transform,opacity; transition: transform linear; }
+#confetti{ position:fixed; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:9999; }
+
+/* live clock */
+#liveClock{ position:fixed; right:16px; bottom:14px; padding:8px 12px; border-radius:10px; background:var(--card-bg); border:2px solid rgba(255,255,255,0.04); z-index:9998; font-weight:800; }
+
+/* small helpers */
+.small-muted{ font-size:12px; color:rgba(255,255,255,0.7) }
+.note{ font-size:12px; color:rgba(255,255,255,0.6); margin-top:6px }
+
+/* animations for UI life */
+@keyframes floaty { 0%{ transform: translateY(0) }50%{ transform: translateY(-6px) }100%{ transform: translateY(0) } }
+.tab-pane { animation:fadeInUp .26s both; }
+</style>
+</head>
+<body class="theme-aero-blue">
+<div id="bgOverlay"></div>
+<div id="floatArea"></div>
+
+<div id="app">
+  <h1>🍴 Ultimate Food Game — All In One (Single Screen)</h1>
+
+  <div class="container card">
+    <div>
+      <div id="result">You Got: —</div>
+
+      <div class="controls" aria-hidden="false">
+        <button class="btn" id="roll1">🎲 Roll 1</button>
+        <button class="btn" id="roll10">🎲 Roll 10</button>
+        <button class="btn" id="openRatesBtn">📊 Drop Rates & Pity</button>
+        <button class="btn" id="settingsBtn">⚙️ Settings</button>
+      </div>
+
+      <div id="log" aria-live="polite"></div>
+
+      <!-- Old quick actions kept, but compact -->
+      <div class="card" style="margin-top:8px">
+        <h3 style="margin:0 0 8px">Quick</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" id="openDex">📖 Food Dex</button>
+          <button class="btn" id="openAch">🏆 Achievements</button>
+          <button class="btn" id="openCombos">🧩 Combos</button>
+          <button class="btn" id="resetAll">🔄 Reset All Data</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel">
+      <div class="tabs">
+        <div class="tab active" data-tab="foodsTab">Foods</div>
+        <div class="tab" data-tab="achsTab">Achievements</div>
+        <div class="tab" data-tab="combosTab">Combos</div>
+        <div class="tab" data-tab="ratesTab">Drop Rates</div>
+        <div class="tab" data-tab="devTab">Stats / Dev</div>
+      </div>
+
+      <div class="panel-body card" id="panelBody" style="min-height:420px">
+        <!-- Foods -->
+        <div id="foodsTab" class="tab-pane">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><strong>Food Dex</strong> <span id="dexProgress" class="small-muted"></span></div>
+            <div class="small-muted">Sort: <select id="dexSort"><option value="alpha">A→Z</option><option value="rarity">Rarity</option></select></div>
+          </div>
+          <div id="foodsGrid" class="dex-grid"></div>
+        </div>
+
+        <!-- Achievements -->
+        <div id="achsTab" class="tab-pane" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><strong>Achievements</strong> <span id="achProgress" class="small-muted"></span></div>
+            <div class="small-muted">Filter: <select id="achFilter"><option value="all">All</option><option value="unlocked">Unlocked</option><option value="locked">Locked</option></select></div>
+          </div>
+          <div id="achGrid" class="ach-grid"></div>
+        </div>
+
+        <!-- Combos -->
+        <div id="combosTab" class="tab-pane" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><strong>Combos / Recipes</strong></div>
+            <div class="small-muted">Tip: combos consume ingredients automatically when created.</div>
+          </div>
+          <div id="combosList"></div>
+        </div>
+
+        <!-- Drop Rates & Pity -->
+        <div id="ratesTab" class="tab-pane" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><strong>Drop Rates & Pity</strong></div>
+            <div class="small-muted">Progress bars: Mythic = rainbow, Secret = red</div>
+          </div>
+          <div class="rates-list">
+            <div class="rate-row">
+              <div class="rate-title"><div>Mythic</div><div id="mythicRateText" class="small-muted"></div></div>
+              <div class="progress-wrap">
+                <div class="progress-track"><div id="mythicFill" class="progress-fill fill-mythic" style="width:0%"></div></div>
+              </div>
+              <div class="note small-muted">Pity: <span id="mythicPity">0</span>/<span id="mythicPityMax">9000</span></div>
+            </div>
+
+            <div class="rate-row">
+              <div class="rate-title"><div>Secret</div><div id="secretRateText" class="small-muted"></div></div>
+              <div class="progress-wrap">
+                <div class="progress-track"><div id="secretFill" class="progress-fill fill-secret" style="width:0%"></div></div>
+              </div>
+              <div class="note small-muted">Pity: <span id="secretPity">0</span>/<span id="secretPityMax">10000</span></div>
+            </div>
+
+            <div class="rate-row">
+              <div class="rate-title"><div>Legendary</div><div id="legendRateText" class="small-muted"></div></div>
+              <div class="progress-track"><div id="legendFill" class="progress-fill" style="width:0%;background:linear-gradient(90deg,#ffd27f,#ffb86b)"></div></div>
+              <div class="note small-muted">Guaranteed Rare+ pity: <span id="rarePity">0</span>/10</div>
+            </div>
+
+            <div class="rate-row">
+              <div class="rate-title"><div>Actual per-item probs</div><div class="small-muted">Calculated from weights</div></div>
+              <div id="perItemRates" style="font-size:12px; max-height:160px; overflow:auto; padding:6px; background:rgba(255,255,255,0.02); border-radius:8px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats / Dev -->
+        <div id="devTab" class="tab-pane" style="display:none">
+          <h4 style="margin-top:0">Quick Stats</h4>
+          <div id="stats">Pulls: 0 · Pity: 0 · Extra Rolls: 0</div>
+          <hr style="border-color:rgba(255,255,255,0.06)">
+          <h4>Top Inventory</h4>
+          <div id="quickInv">(empty)</div>
+          <hr style="border-color:rgba(255,255,255,0.06)">
+          <label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input id="devEnableCheckbox" type="checkbox"/> Enable Developer Mode (shows Dev Gear)</label>
+          <div id="devControls" style="display:none;margin-top:8px">
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <select id="giveFoodSelect" style="flex:1"></select>
+              <button class="btn" id="giveFoodBtn">➕</button>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <select id="giveComboSelect" style="flex:1"></select>
+              <button class="btn" id="giveComboBtn">➕ Combo</button>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <button class="btn" id="forceCommon">Force Common</button>
+              <button class="btn" id="forceMythic">Force Mythic</button>
+              <button class="btn" id="forceSecret">Force Secret</button>
+              <button class="btn" id="revealRecipes">Reveal Recipes</button>
+              <button class="btn" id="devReset">Reset (Dev)</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- settings drawer -->
+<div id="settingsDrawer" class="card" aria-hidden="false" style="position:fixed;left:14px;bottom:14px;width:360px;z-index:10002;">
+  <strong>Settings</strong>
+
+  <div style="margin-top:8px" class="settings-option">
+    <label style="font-weight:700;color:#000">Background Mode</label>
+    <div style="display:flex;gap:8px">
+      <label><input type="radio" name="bgMode" value="floating" checked/> Floating Foods</label>
+      <label><input type="radio" name="bgMode" value="aeroBlue"/> Aero Blue (bubbles)</label>
+      <label><input type="radio" name="bgMode" value="aeroGreen"/> Aero Green (leaves)</label>
+    </div>
+    <div style="font-size:12px;color:#333">(Floating foods is default)</div>
+
+    <div class="preview-row">
+      <div class="preview-mini" id="previewFloating" style="background:linear-gradient(180deg,#ffffff10,#ffffff03); color:#000">Sample UI<br/><span style="font-size:11px">Readable text</span></div>
+      <div class="preview-mini" id="previewBlue" style="background:linear-gradient(90deg,#cfeeff,#bfe6ff);">Aero Blue<br/><span style="font-size:11px">Text preview</span></div>
+      <div class="preview-mini" id="previewGreen" style="background:linear-gradient(90deg,#dfffe0,#c8f5c9);">Aero Green<br/><span style="font-size:11px">Text preview</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top:8px" class="settings-option">
+    <label style="font-weight:700;color:#000">Background Opacity</label>
+    <input id="bgOpacity" class="range" type="range" min="0" max="0.9" step="0.01" value="0.10"/>
+    <div class="small-muted">Overlay darkness above solid background (0 = no overlay).</div>
+  </div>
+
+  <div style="margin-top:8px" class="settings-option">
+    <label style="font-weight:700;color:#000">Clock Format</label>
+    <div style="display:flex;gap:8px">
+      <label><input type="radio" name="clockFmt" value="12" checked/> 12h</label>
+      <label><input type="radio" name="clockFmt" value="24"/> 24h</label>
+    </div>
+  </div>
+
+  <div style="margin-top:8px;display:flex;gap:8px">
+    <button class="btn" id="closeSettings">Close</button>
+    <button class="btn" id="exportSave">⬇️ Export Save</button>
+    <button class="btn" id="importSave">⬆️ Import Save</button>
+  </div>
+  <div style="margin-top:8px">
+    <button class="btn" id="wipeData">⚠️ Wipe All Game Data</button>
+    <div class="small-muted">Use if you want a completely fresh start.</div>
+  </div>
+</div>
+
+<!-- dev gear floating panel (small) -->
+<div id="devDrawer" style="position:fixed;right:14px;bottom:14px;width:280px;background:var(--card-bg);border-radius:12px;padding:12px;border:2px solid rgba(255,255,255,0.04);display:none;z-index:10003;">
+  <strong>Dev Tools</strong>
+  <div style="margin-top:8px">
+    <div style="display:flex;gap:8px">
+      <select id="devGiveSelect" style="flex:1"></select>
+      <button class="btn" id="devGive">Give</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn" id="devForceMyth">Force Mythic</button>
+      <button class="btn" id="devForceSecret">Force Secret</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+<div id="liveClock">—</div>
+
+<script>
+/* ============================
+   Data & rarities
+   ============================ */
+/* Items: kept similar to your previous lists but compacted; you can expand easily */
+const ITEMS = [
+  /* Common (many fruits) */
+  {name:"Apple", emoji:"🍎", rarity:"Common"},
+  {name:"Banana", emoji:"🍌", rarity:"Common"},
+  {name:"Orange", emoji:"🍊", rarity:"Common"},
+  {name:"Pear", emoji:"🍐", rarity:"Common"},
+  {name:"Grapes", emoji:"🍇", rarity:"Common"},
+  {name:"Strawberry", emoji:"🍓", rarity:"Common"},
+  {name:"Blueberry", emoji:"🫐", rarity:"Common"},
+  {name:"Cherry", emoji:"🍒", rarity:"Common"},
+  {name:"Lemon", emoji:"🍋", rarity:"Common"},
+  {name:"Lime", emoji:"🟢", rarity:"Common"},
+  {name:"Peach", emoji:"🍑", rarity:"Common"},
+  {name:"Plum", emoji:"🍑", rarity:"Common"},
+  {name:"Watermelon", emoji:"🍉", rarity:"Common"},
+  {name:"Pineapple", emoji:"🍍", rarity:"Common"},
+  {name:"Mango", emoji:"🥭", rarity:"Common"},
+  {name:"Kiwi", emoji:"🥝", rarity:"Common"},
+  {name:"Apricot", emoji:"🍑", rarity:"Common"},
+  {name:"Fig", emoji:"🍈", rarity:"Common"},
+  {name:"Papaya", emoji:"🟠", rarity:"Common"},
+  {name:"Coconut", emoji:"🥥", rarity:"Common"},
+  /* Uncommon */
+  {name:"Tomato", emoji:"🍅", rarity:"Uncommon"},
+  {name:"Avocado", emoji:"🥑", rarity:"Uncommon"},
+  {name:"Pomegranate", emoji:"🥭", rarity:"Uncommon"},
+  {name:"Guava", emoji:"🟠", rarity:"Uncommon"},
+  {name:"Nectarine", emoji:"🍑", rarity:"Uncommon"},
+  {name:"Blackberry", emoji:"🫐", rarity:"Uncommon"},
+  {name:"Raspberry", emoji:"🍓", rarity:"Uncommon"},
+  {name:"Cantaloupe", emoji:"🍈", rarity:"Uncommon"},
+  {name:"Honeydew", emoji:"🍈", rarity:"Uncommon"},
+  {name:"Dragonfruit", emoji:"🐉", rarity:"Uncommon"},
+  /* Rare */
+  {name:"Cheese", emoji:"🧀", rarity:"Rare"},
+  {name:"Fried Egg", emoji:"🍳", rarity:"Rare"},
+  {name:"Quiche", emoji:"🥧", rarity:"Rare"},
+  {name:"Yogurt", emoji:"🥣", rarity:"Rare"},
+  {name:"Pistachio", emoji:"🥜", rarity:"Rare"},
+  /* Legendary */
+  {name:"Pancakes", emoji:"🥞", rarity:"Legendary"},
+  {name:"French Fry", emoji:"🍟", rarity:"Legendary"},
+  {name:"Popcorn", emoji:"🍿", rarity:"Legendary"},
+  {name:"Golden Truffle", emoji:"🍄", rarity:"Legendary"},
+  /* Secret */
+  {name:"ULTRA Slushie", emoji:"🧊", rarity:"Secret"},
+  {name:"Chocolate Cake", emoji:"🍰", rarity:"Secret"},
+  {name:"Mystic Macaron", emoji:"🧁", rarity:"Secret"},
+  {name:"Divine Doughnut", emoji:"🍩", rarity:"Secret"},
+  /* Mythic (rarer than Secret in base weight, but secret pity > mythic pity) */
+  {name:"Celestial Sorbet", emoji:"🍧", rarity:"Mythic"},
+  {name:"GOLDEN Nugget", emoji:"🪙", rarity:"Mythic"}
+];
+
+/* tuned base rarity weights (Secret rarer than Mythic by base weight) */
+const RARITY_BASE = { Common:15, Uncommon:8, Rare:3.5, Legendary:0.4, Mythic:0.02, Secret:0.01 };
+
+/* distribute rarity weight across items to keep per-rarity chance stable regardless of item count */
+const BY_RARITY = {};
+ITEMS.forEach(it=> { BY_RARITY[it.rarity] = (BY_RARITY[it.rarity]||0) + 1; });
+const ITEM_NAMES = ITEMS.map(i=>i.name);
+const ITEM_WEIGHTS = ITEMS.map(i=>{
+  const base = RARITY_BASE[i.rarity] || 1;
+  const count = BY_RARITY[i.rarity] || 1;
+  return base / count;
+});
+
+/* combos (with descriptions) */
+const COMBOS = [
+  {req:["Apple","Chocolate Cake"], result:"Caramel Apple", achievement:"🍎 Fairground Treat", desc:"Sweet caramel-coated apple."},
+  {req:["Banana","Yogurt","Strawberry"], result:"Smoothie Bowl", achievement:"🥤 Health Nut", desc:"Blend fruits into a creamy bowl."},
+  {req:["Tomato","Cheese","Watermelon"], result:"Summer Bruschetta", achievement:"🍅 Fresh Bite", desc:"Juicy topped toasts."},
+  {req:["Pancakes","Chocolate Cake"], result:"Choco-Pancake Stack", achievement:"🧁 Sweet Stack", desc:"Pancakes with cake layers."},
+  {req:["ULTRA Slushie","French Fry"], result:"Frosty Fry", achievement:"❄️ Chill Snack", desc:"Unexpected but satisfying."}
+];
+
+/* achievements list (structured) */
+const ACHIEVEMENTS = [
+  {id:"collector_small", title:"Fruit Collector I", desc:"Collect 10 different foods", check:(s)=> s.foodDex.size>=10, reward:{extraRolls:0}},
+  {id:"collector_med", title:"Fruit Collector II", desc:"Collect 25 different foods", check:(s)=> s.foodDex.size>=25, reward:{extraRolls:1}},
+  {id:"rare_col", title:"🍳 Rare Collector", desc:"Collect 3 rare items", check:(s)=> ITEMS.filter(i=>i.rarity==='Rare').map(i=>i.name).filter(n=> s.foodDex.has(n)).length>=3, reward:{}},
+  {id:"find_secret", title:"✨ Secret Seeker", desc:"Find any Secret or Mythic item", check:(s)=> [...s.foodDex].some(n=> ITEMS.find(it=>it.name===n && (it.rarity==='Secret' || it.rarity==='Mythic')) ), reward:{}},
+  {id:"mythic_master", title:"🌟 Mythic Hunter", desc:"Obtain a Mythic item", check:(s)=> [...s.foodDex].some(n=> ITEMS.find(it=>it.name===n && it.rarity==='Mythic')), reward:{extraRolls:2}}
+];
+
+/* ============================
+   state & persistence
+   ============================ */
+const STORAGE_KEY = "ultimate_food_game_all_in_one_v4";
+let state = {
+  inventory: {},
+  foodDex: new Set(),
+  achievements: new Set(),
+  completedCombos: new Set(),
+  pulls: 0,
+  pityRarePlus: 0,     // pity for guaranteed Rare+ (10)
+  pityMythic: 0,      // custom mythic pity
+  pitySecret: 0,      // custom secret pity
+  extraRolls: 0,
+  history: []
+};
+let devEnabled = false;
+let speedMode = false;
+let clock24 = false;
+
+/* Mythic & Secret pity thresholds (per request) */
+const MYTHIC_PITY = 9000;
+const SECRET_PITY = 10000;
+const RAREPLUS_PITY = 10;
+
+/* load/save */
+function saveState(){
+  const obj = {
+    inventory: state.inventory,
+    foodDex: [...state.foodDex],
+    achievements: [...state.achievements],
+    completedCombos: [...state.completedCombos],
+    pulls: state.pulls,
+    pityRarePlus: state.pityRarePlus,
+    pityMythic: state.pityMythic,
+    pitySecret: state.pitySecret,
+    extraRolls: state.extraRolls,
+    history: state.history
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+  localStorage.setItem('dev_mode_enabled_v4', devEnabled ? '1':'0');
+  localStorage.setItem('clock_format_24_v4', clock24 ? '1':'0');
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const p = JSON.parse(raw);
+      state.inventory = p.inventory || {};
+      state.foodDex = new Set(p.foodDex || []);
+      state.achievements = new Set(p.achievements || []);
+      state.completedCombos = new Set(p.completedCombos || []);
+      state.pulls = p.pulls || 0;
+      state.pityRarePlus = p.pityRarePlus || 0;
+      state.pityMythic = p.pityMythic || 0;
+      state.pitySecret = p.pitySecret || 0;
+      state.extraRolls = p.extraRolls || 0;
+      state.history = p.history || [];
+    }
+    devEnabled = localStorage.getItem('dev_mode_enabled_v4') === '1';
+    clock24 = localStorage.getItem('clock_format_24_v4') === '1';
+    document.getElementById('devEnableCheckbox').checked = devEnabled;
+    document.querySelectorAll('input[name="clockFmt"]').forEach(r=> r.checked = (r.value==='24'? clock24 : !clock24));
+    document.getElementById('devControls').style.display = devEnabled ? 'block':'none';
+  }catch(e){ console.error(e); }
+}
+
+/* ============================
+   helpers: find, weighted pick, time
+   ============================ */
+function findItem(name){ return ITEMS.find(i=>i.name===name) || null; }
+function weightedPick(names, weights){
+  let s = weights.reduce((a,b)=>a+b,0);
+  let r = Math.random()*s;
+  for(let i=0;i<names.length;i++){ r -= weights[i]; if(r <= 0) return names[i]; }
+  return names[names.length-1];
+}
+function formatTime(fmt24){
+  const d = new Date();
+  if(fmt24){
+    const hh = String(d.getHours()).padStart(2,'0'), mm=String(d.getMinutes()).padStart(2,'0'), ss=String(d.getSeconds()).padStart(2,'0');
+    return `${hh}:${mm}:${ss}`;
+  } else {
+    let h = d.getHours();
+    const am = h < 12;
+    h = h % 12 || 12;
+    const hh = String(h), mm=String(d.getMinutes()).padStart(2,'0'), ss=String(d.getSeconds()).padStart(2,'0');
+    return `${hh}:${mm}:${ss} ${am? 'AM':'PM'}`;
+  }
+}
+
+/* ============================
+   visuals: floating emojis, stars, golden unlock
+   ============================ */
+const floatArea = document.getElementById('floatArea');
+let floatMode = 'floating';
+let floatRefreshTimer;
+const FOOD_EMOJIS = ITEMS.map(i=>i.emoji).filter(Boolean);
+
+function startFloatingFood(){
+  stopFloating();
+  const count = Math.min(40, Math.max(8, Math.floor(window.innerWidth/40)));
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className='float-emoji';
+    el.innerText = FOOD_EMOJIS[Math.floor(Math.random()*FOOD_EMOJIS.length)];
+    const left = Math.random()*100;
+    el.style.left = left + '%';
+    el.style.top = (Math.random()*120 - 20) + '%';
+    el.style.fontSize = (12 + Math.random()*32) + 'px';
+    const dur = 8 + Math.random()*18;
+    el.style.transition = `transform ${dur}s linear, opacity ${dur}s linear`;
+    floatArea.appendChild(el);
+    setTimeout(()=> {
+      const dx = (Math.random()*300 - 150);
+      el.style.transform = `translate(${dx}px, ${window.innerHeight + 220}px) rotate(${Math.random()*360}deg)`;
+      el.style.opacity = 0.95;
+    }, 50 + Math.random()*600);
+    setTimeout(()=> el.remove(), (dur+1)*1000);
+  }
+  floatMode = 'floating';
+  floatRefreshTimer = setInterval(()=> { if(floatMode!=='floating') return; startFloatingFood(); }, 14000);
+}
+function stopFloating(){ floatMode = 'none'; clearInterval(floatRefreshTimer); floatArea.innerHTML = ''; }
+
+let startStarsTimer;
+function startStars(){
+  stopFloating();
+  floatMode='stars';
+  const spawn = ()=> {
+    const el = document.createElement('div');
+    el.style.position='fixed'; el.style.width='3px'; el.style.height='120px';
+    el.style.background='linear-gradient(90deg,rgba(255,255,255,1),transparent)';
+    el.style.zIndex=0; el.style.pointerEvents='none';
+    const top = 10 + Math.random()*window.innerHeight*0.4;
+    el.style.top = top + 'px';
+    el.style.left = (window.innerWidth + 50) + 'px';
+    el.style.transform = `rotate(${(20+Math.random()*40)*-1}deg)`;
+    document.body.appendChild(el);
+    const dur = 900 + Math.random()*1400;
+    el.animate([{transform:el.style.transform, opacity:1},{transform:`translate(-${window.innerWidth + 500}px, ${window.innerHeight}px) ${el.style.transform}`, opacity:0}],{duration:dur, easing:'linear'});
+    setTimeout(()=> el.remove(), dur+80);
+  };
+  startStarsTimer = setInterval(()=> { if(floatMode!=='stars') return; if(Math.random()<0.7) spawn(); }, 1000);
+}
+function stopStars(){ clearInterval(startStarsTimer); floatMode='none'; }
+
+function setBackgroundMode(mode){
+  if(mode==='floating'){ startFloatingFood(); stopStars(); document.body.className = 'theme-aero-blue'; }
+  else if(mode==='aeroBlue'){ stopFloating(); stopStars(); document.body.className = 'theme-aero-blue'; }
+  else if(mode==='aeroGreen'){ stopFloating(); stopStars(); document.body.className = 'theme-aero-green'; }
+  else { stopFloating(); stopStars(); document.body.className = ''; }
+  // update overlay color
+  document.getElementById('bgOverlay').style.background = `rgba(0,0,0,${getComputedStyle(document.documentElement).getPropertyValue('--bg-overlay')||0.10})`;
+}
+
+/* golden unlock visual when GOLDEN Nugget found (first time) */
+let goldenUnlocked = false;
+function unlockGoldenVisual(){
+  if(goldenUnlocked) return;
+  goldenUnlocked = true;
+  document.body.classList.add('theme-golden');
+  // falling golden glitter (simple)
+  const area = document.getElementById('floatArea');
+  const pieces = 80;
+  for(let i=0;i<pieces;i++){
+    const p = document.createElement('div');
+    p.style.position='absolute'; p.style.left = Math.random()*100 + '%';
+    p.style.top = '-10%'; p.style.width = (4+Math.random()*6)+'px'; p.style.height = (8+Math.random()*14)+'px';
+    p.style.background = 'linear-gradient(180deg,#ffd700,#ffec9a)';
+    p.style.opacity = 0.95; p.style.transform = `rotate(${Math.random()*360}deg)`;
+    p.style.borderRadius = '4px';
+    p.style.pointerEvents = 'none';
+    area.appendChild(p);
+    const dur = 4000 + Math.random()*4000;
+    p.animate([{transform:`translateY(0) rotate(0deg)`, opacity:1},{transform:`translateY(${window.innerHeight+200}px) rotate(${Math.random()*720}deg)`, opacity:0}],{duration:dur, easing:'linear'});
+    setTimeout(()=> p.remove(), dur+80);
+  }
+}
+
+/* ============================
+   gacha core with pity applied
+   ============================ */
+/* pickWithPity logic:
+   - increment three counters on each pull: pityRarePlus, pityMythic, pitySecret
+   - if secret pity >= SECRET_PITY -> force Secret
+   - else if mythic pity >= MYTHIC_PITY -> force Mythic
+   - else if pityRarePlus >= RAREPLUS_PITY -> force rare+ (Rare/Legendary/Mythic/Secret)
+   - else pick weighted
+*/
+function pickWithPity(){
+  // secret pity check first (highest threshold)
+  if(state.pitySecret >= SECRET_PITY){
+    state.pitySecret = 0;
+    state.pityMythic = 0;
+    state.pityRarePlus = 0;
+    const pool = ITEMS.filter(it => it.rarity==='Secret').map(i=>i.name);
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+  if(state.pityMythic >= MYTHIC_PITY){
+    state.pityMythic = 0;
+    state.pityRarePlus = 0;
+    const pool = ITEMS.filter(it => it.rarity==='Mythic').map(i=>i.name);
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+  if(state.pityRarePlus >= RAREPLUS_PITY){
+    state.pityRarePlus = 0;
+    const pool = ITEMS.filter(it => ['Rare','Legendary','Secret','Mythic'].includes(it.rarity)).map(i=>i.name);
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+  // default weighted
+  return weightedPick(ITEM_NAMES, ITEM_WEIGHTS);
+}
+
+function rollOnce(){
+  state.pulls++;
+  state.pityRarePlus++;
+  state.pityMythic++;
+  state.pitySecret++;
+
+  const picked = pickWithPity();
+  const item = findItem(picked);
+  if(!item) return;
+  state.inventory[picked] = (state.inventory[picked]||0)+1;
+  state.foodDex.add(picked);
+  state.history.unshift({ts:new Date().toISOString(), name:picked, rarity:item.rarity, display:`${item.emoji} ${picked}`});
+  if(state.history.length>2000) state.history.pop();
+
+  setResultText(`You Got: ${item.emoji} ${picked} [${item.rarity}]`);
+  if(item.rarity==='Mythic'){
+    log(`🌟 MYTHIC: ${item.emoji} ${picked} [${item.rarity}]`,'legendary');
+    createConfetti(180);
+    runAchievementChecks();
+  } else if(item.rarity==='Secret'){
+    log(`✨ SECRET: ${item.emoji} ${picked} [${item.rarity}]`,'secret');
+    createConfetti(140);
+    runAchievementChecks();
+  } else if(item.rarity==='Legendary'){
+    log(`🌟 LEGENDARY: ${item.emoji} ${picked} [${item.rarity}]`,'legendary');
+    createConfetti(110);
+  } else {
+    log(`You got: ${item.emoji} ${picked} [${item.rarity}]`);
+  }
+
+  // golden nugget first time unlock
+  if(item.name === 'GOLDEN Nugget' && !goldenUnlocked) unlockGoldenVisual();
+
+  processCombos();
+  runAchievementChecks();
+
+  if(state.extraRolls > 0){
+    state.extraRolls--; log("🎁 Quest reward: bonus roll!"); setTimeout(()=>{ rollOnce(); saveState(); renderAll(); }, 140);
+    saveState(); return;
+  }
+  saveState(); renderAll();
+}
+
+function rollMulti(n=10){
+  document.getElementById('roll10').disabled = true;
+  let i=0;
+  function step(){ if(i>=n){ document.getElementById('roll10').disabled=false; return; } rollOnce(); i++; setTimeout(step, speedMode?20:120); }
+  step();
+}
+
+/* ============================
+   combos: consume ingredients & create result
+   ============================ */
+function processCombos(){
+  let made=false;
+  do{
+    made=false;
+    for(const combo of COMBOS){
+      const ok = combo.req.every(r => (state.inventory[r]||0) >= 1);
+      if(ok){
+        combo.req.forEach(r => { state.inventory[r] -= 1; if(state.inventory[r] <= 0) delete state.inventory[r]; });
+        state.inventory[combo.result] = (state.inventory[combo.result]||0)+1;
+        state.foodDex.add(combo.result);
+        state.completedCombos.add(combo.result);
+        log(`🧩 Combo: ${combo.result} (from ${combo.req.join(' + ')})`);
+        createConfetti(90);
+        saveState();
+        made=true; break;
+      }
+    }
+  }while(made);
+}
+
+/* ============================
+   achievements
+   ============================ */
+function runAchievementChecks(){
+  ACHIEVEMENTS.forEach(a=>{
+    if(a.check(state) && !state.achievements.has(a.title)){
+      state.achievements.add(a.title);
+      log(`🏆 Achievement Unlocked: ${a.title} — ${a.desc}`);
+      if(a.reward && a.reward.extraRolls) state.extraRolls += a.reward.extraRolls;
+      createConfetti(120);
+    }
+  });
+  COMBOS.forEach(c=>{
+    if(state.completedCombos.has(c.result) && c.achievement && !state.achievements.has(c.achievement)){
+      state.achievements.add(c.achievement);
+      log(`🏆 Achievement Unlocked: ${c.achievement} — (from combo ${c.result})`);
+      createConfetti(100);
+    }
+  });
+  if(state.foodDex.size >= 50 && !state.achievements.has("Ultimate Collector")){
+    state.achievements.add("Ultimate Collector");
+    log("🏆 Achievement Unlocked: Ultimate Collector — collected 50+ items");
+    createConfetti(160);
+  }
+}
+
+/* ============================
+   UI & rendering
+   ============================ */
+const logEl = document.getElementById('log');
+function log(msg,type){
+  const row=document.createElement('div'); row.className='log-row';
+  const dot=document.createElement('div'); dot.className='log-dot';
+  dot.style.background = type==='secret'?'#ff77ff':(type==='legendary'?'gold':'#fff');
+  const txt=document.createElement('div'); txt.innerText = msg;
+  if(type==='secret') txt.classList.add('secret');
+  if(type==='legendary') txt.classList.add('legendary');
+  row.appendChild(dot); row.appendChild(txt); logEl.prepend(row);
+  while(logEl.children.length > 400) logEl.removeChild(logEl.lastChild);
+}
+function setResultText(t){ document.getElementById('result').innerText = t; }
+
+function renderFoods(){
+  const grid = document.getElementById('foodsGrid');
+  grid.innerHTML = '';
+  const comboResults = COMBOS.map(c=>c.result);
+  const allNames = [...new Set([...ITEM_NAMES,...comboResults])];
+  const sort = document.getElementById('dexSort').value;
+  if(sort==='alpha') allNames.sort((a,b)=>a.localeCompare(b));
+  else {
+    const order = {Common:0,Uncommon:1,Rare:2,Legendary:3,Mythic:4,Secret:5,Combo:6,undefined:7};
+    allNames.sort((a,b)=>{
+      const ai = findItem(a); const bi = findItem(b);
+      const ar = ai? ai.rarity : (comboResults.includes(a)? 'Combo' : '');
+      const br = bi? bi.rarity : (comboResults.includes(b)? 'Combo' : '');
+      const oa = state.foodDex.has(a)?0:1;
+      const ob = state.foodDex.has(b)?0:1;
+      if(oa!==ob) return oa-ob;
+      if(order[ar]!==order[br]) return order[ar]-order[br];
+      return a.localeCompare(b);
+    });
+  }
+  allNames.forEach(name=>{
+    const item = findItem(name);
+    const el = document.createElement('div'); el.className='dex-item '+(state.foodDex.has(name)?'unlocked':'locked');
+    const emojiDiv = document.createElement('div'); emojiDiv.className='dex-emoji'; emojiDiv.innerText = item? item.emoji : '🧩';
+    const nameDiv = document.createElement('div'); nameDiv.className='dex-name';
+    nameDiv.innerText = (state.foodDex.has(name)? '✅ ':'') + name;
+    if(item){
+      const sub = document.createElement('div'); sub.className='small-muted'; sub.style.fontSize='11px'; sub.innerText = item.rarity;
+      el.appendChild(emojiDiv); el.appendChild(nameDiv); el.appendChild(sub);
+    } else {
+      el.appendChild(emojiDiv); el.appendChild(nameDiv);
+    }
+    grid.appendChild(el);
+  });
+  const discovered = state.foodDex.size;
+  const total = allNames.length;
+  document.getElementById('dexProgress').innerText = `${discovered}/${total}`;
+}
+
+function renderAchs(){
+  const grid = document.getElementById('achGrid');
+  grid.innerHTML = '';
+  const comboAchs = COMBOS.map(c=>c.achievement).filter(Boolean);
+  const core = ACHIEVEMENTS.map(a=>a.title).concat(comboAchs);
+  const all = [...new Set(core)];
+  const filter = document.getElementById('achFilter').value;
+  all.forEach(a=>{
+    const unlocked = state.achievements.has(a);
+    if(filter==='unlocked' && !unlocked) return;
+    if(filter==='locked' && unlocked) return;
+    const card = document.createElement('div'); card.className='ach-card '+(unlocked?'unlocked':'');
+    const ico = document.createElement('div'); ico.style.fontSize='20px'; ico.innerText = unlocked? '🏆':'🔒';
+    const t = document.createElement('div'); t.style.fontWeight='700'; t.innerText = a;
+    const sub = document.createElement('div'); sub.className='small-muted'; sub.innerText = unlocked? 'Unlocked':'Locked';
+    card.appendChild(ico); card.appendChild(t); card.appendChild(sub);
+    grid.appendChild(card);
+  });
+  const unlocked = all.filter(a=> state.achievements.has(a)).length;
+  document.getElementById('achProgress').innerText = `${unlocked}/${all.length}`;
+}
+
+function renderCombos(){
+  const list = document.getElementById('combosList'); list.innerHTML='';
+  COMBOS.forEach(c=>{
+    const card = document.createElement('div'); card.className='combo-card';
+    const title = document.createElement('div'); title.className='combo-result'; title.innerText = `${c.result} ${c.achievement? ' — ' + c.achievement : ''}`;
+    const desc = document.createElement('div'); desc.className='small-muted'; desc.style.marginBottom='6px'; desc.innerText = c.desc || '';
+    const reqs = document.createElement('div'); reqs.className='combo-req';
+    c.req.forEach(r=> {
+      const it = findItem(r);
+      const el = document.createElement('div'); el.style.padding='6px'; el.style.borderRadius='6px'; el.style.background='rgba(255,255,255,0.02)';
+      el.innerText = (it? it.emoji + ' ' : '') + r + (state.inventory[r]? ` ×${state.inventory[r]}` : '');
+      reqs.appendChild(el);
+    });
+    const makeBtn = document.createElement('button'); makeBtn.className='btn'; makeBtn.style.marginTop='8px'; makeBtn.innerText = 'Make Combo (consume)';
+    makeBtn.addEventListener('click', ()=>{
+      const ok = c.req.every(r => (state.inventory[r]||0) >= 1);
+      if(!ok){ alert('Missing ingredients'); return; }
+      c.req.forEach(r=> { state.inventory[r] -= 1; if(state.inventory[r]<=0) delete state.inventory[r]; });
+      state.inventory[c.result] = (state.inventory[c.result]||0)+1;
+      state.foodDex.add(c.result); state.completedCombos.add(c.result); log(`🧩 Made ${c.result} (combo)`); saveState(); renderAll();
+    });
+    card.appendChild(title); card.appendChild(desc); card.appendChild(reqs); card.appendChild(makeBtn);
+    list.appendChild(card);
+  });
+}
+
+function renderRates(){
+  // relative percentages (normalized)
+  const totalWeight = ITEM_WEIGHTS.reduce((a,b)=>a+b,0);
+  // compute rarities per-item chance
+  const rarityTotals = {};
+  ITEMS.forEach((it, idx)=>{
+    rarityTotals[it.rarity] = (rarityTotals[it.rarity] || 0) + ITEM_WEIGHTS[idx];
+  });
+  const mythicProb = (rarityTotals['Mythic'] || 0) / totalWeight;
+  const secretProb = (rarityTotals['Secret'] || 0) / totalWeight;
+  const legendProb = (rarityTotals['Legendary'] || 0) / totalWeight;
+
+  document.getElementById('mythicRateText').innerText = (mythicProb*100).toFixed(4)+'%';
+  document.getElementById('secretRateText').innerText = (secretProb*100).toFixed(4)+'%';
+  document.getElementById('legendRateText').innerText = (legendProb*100).toFixed(4)+'%';
+
+  // fill widths for visualization (capped)
+  document.getElementById('mythicFill').style.width = Math.min(100, mythicProb*100*50)+'%';
+  document.getElementById('secretFill').style.width = Math.min(100, secretProb*100*50)+'%';
+  document.getElementById('legendFill').style.width = Math.min(100, legendProb*100*30)+'%';
+
+  // update pity display
+  document.getElementById('mythicPity').innerText = state.pityMythic;
+  document.getElementById('mythicPityMax').innerText = MYTHIC_PITY;
+  document.getElementById('secretPity').innerText = state.pitySecret;
+  document.getElementById('secretPityMax').innerText = SECRET_PITY;
+  document.getElementById('rarePity').innerText = state.pityRarePlus;
+
+  // per item list
+  const perEl = document.getElementById('perItemRates'); perEl.innerHTML = '';
+  ITEMS.forEach((it,idx)=>{
+    const p = (ITEM_WEIGHTS[idx] / totalWeight) * 100;
+    const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.padding='2px 0';
+    row.innerHTML = `<div>${it.emoji} ${it.name} <span class="small-muted" style="font-size:11px">(${it.rarity})</span></div><div class="small-muted">${p.toFixed(6)}%</div>`;
+    perEl.appendChild(row);
+  });
+}
+
+/* quick stats render */
+function renderQuick(){
+  document.getElementById('stats').innerText = `Pulls: ${state.pulls} · Pity: ${state.pityRarePlus} · Extra Rolls: ${state.extraRolls}`;
+  const inv = Object.entries(state.inventory).sort((a,b)=>b[1]-a[1]).slice(0,12);
+  document.getElementById('quickInv').innerHTML = inv.length? inv.map(x=>`${x[1]}× ${x[0]}`).join('<br>') : '(empty)';
+}
+
+/* render everything */
+function renderAll(){
+  renderFoods(); renderAchs(); renderCombos(); renderQuick(); renderRates();
+}
+
+/* ============================
+   confetti (simple)
+   ============================ */
+const confCanvas = document.getElementById('confetti');
+const confCtx = confCanvas.getContext && confCanvas.getContext('2d');
+function resizeCanvas(){ if(confCanvas){ confCanvas.width = window.innerWidth; confCanvas.height = window.innerHeight; } }
+window.addEventListener('resize', resizeCanvas); resizeCanvas();
+function createConfetti(count=80){
+  if(!confCtx) return;
+  const pieces = [];
+  for(let i=0;i<count;i++){
+    pieces.push({
+      x: Math.random()*confCanvas.width,
+      y: Math.random()*-confCanvas.height,
+      r: Math.random()*6+3,
+      d: Math.random()*100,
+      tilt: Math.random()*10-10,
+      color: `hsl(${Math.random()*360} 80% 60%)`,
+      tiltInc: Math.random()*0.06+0.03
+    });
+  }
+  let t0 = null;
+  const run = (t)=>{
+    if(!t0) t0 = t;
+    const dt = t - t0;
+    confCtx.clearRect(0,0,confCanvas.width, confCanvas.height);
+    pieces.forEach(p=>{
+      confCtx.beginPath();
+      confCtx.lineWidth = p.r/2;
+      confCtx.strokeStyle = p.color;
+      confCtx.moveTo(p.x+p.tilt, p.y);
+      confCtx.lineTo(p.x+p.tilt+p.r/2, p.y+p.tilt+p.r/2);
+      confCtx.stroke();
+      p.tilt += p.tiltInc;
+      p.y += (Math.cos(p.d)+3+p.r/2)/2;
+      p.x += Math.sin(p.d);
+      if(p.y > confCanvas.height) p.y = -10;
+    });
+    if(dt < 3500) requestAnimationFrame(run);
+    else confCtx.clearRect(0,0,confCanvas.width, confCanvas.height);
+  };
+  requestAnimationFrame(run);
+}
+
+/* ============================
+   event wiring & dev
+   ============================ */
+document.getElementById('roll1').addEventListener('click', ()=> { rollOnce(); saveState(); renderAll(); if(Math.random()<0.33) spawnShootingStar(); });
+document.getElementById('roll10').addEventListener('click', ()=> { rollMulti(10); saveState(); renderAll(); });
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', (e)=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    const target = t.dataset.tab;
+    document.querySelectorAll('.tab-pane').forEach(p=> p.style.display='none');
+    document.getElementById(target).style.display='block';
+  });
+});
+/* quick open tab buttons */
+document.getElementById('openDex').addEventListener('click', ()=> { document.querySelector('[data-tab="foodsTab"]').click(); });
+document.getElementById('openAch').addEventListener('click', ()=> { document.querySelector('[data-tab="achsTab"]').click(); });
+document.getElementById('openCombos').addEventListener('click', ()=> { document.querySelector('[data-tab="combosTab"]').click(); });
+document.getElementById('openRatesBtn').addEventListener('click', ()=> { document.querySelector('[data-tab="ratesTab"]').click(); });
+
+/* settings */
+document.getElementById('settingsBtn').addEventListener('click', ()=> { document.getElementById('settingsDrawer').style.display='block'; });
+document.getElementById('closeSettings').addEventListener('click', ()=> { document.getElementById('settingsDrawer').style.display='none'; });
+
+document.querySelectorAll('input[name="bgMode"]').forEach(r=> r.addEventListener('change', (e)=> {
+  const mode = e.target.value;
+  setBackgroundMode(mode);
+}));
+
+/* bg opacity slider */
+const bgOpacityInput = document.getElementById('bgOpacity');
+bgOpacityInput.addEventListener('input', (e)=>{
+  const v = parseFloat(e.target.value);
+  document.documentElement.style.setProperty('--bg-overlay', v);
+  document.getElementById('bgOverlay').style.background = `rgba(0,0,0,${v})`;
+});
+
+/* clock format */
+document.querySelectorAll('input[name="clockFmt"]').forEach(r=> r.addEventListener('change', (e)=> {
+  clock24 = e.target.value==='24';
+  localStorage.setItem('clock_format_24_v4', clock24? '1':'0');
+}));
+
+/* export/import */
+document.getElementById('exportSave').addEventListener('click', ()=>{
+  const data = localStorage.getItem(STORAGE_KEY);
+  if(!data){ alert('No save data to export'); return; }
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'ultimate_food_save.json'; a.click(); URL.revokeObjectURL(url);
+});
+document.getElementById('importSave').addEventListener('click', ()=> {
+  const inp = document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange = (ev)=>{
+    const f = ev.target.files[0]; if(!f) return;
+    const reader = new FileReader(); reader.onload = ()=> {
+      try{
+        const parsed = JSON.parse(reader.result);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed)); loadState(); saveState(); renderAll(); alert('Save imported.');
+      }catch(err){ alert('Invalid file'); }
+    }; reader.readAsText(f);
+  }; inp.click();
+});
+
+/* reset / wipe */
+document.getElementById('resetAll').addEventListener('click', ()=> clearAllData());
+document.getElementById('wipeData').addEventListener('click', ()=> clearAllData());
+function clearAllData(){
+  if(!confirm('Reset ALL saved data? This will wipe Dex, inventory, achievements and history.')) return;
+  state = { inventory:{}, foodDex:new Set(), achievements:new Set(), completedCombos:new Set(), pulls:0, pityRarePlus:0, pityMythic:0, pitySecret:0, extraRolls:0, history:[] };
+  goldenUnlocked = false;
+  saveState(); renderAll(); createConfetti(160);
+}
+
+/* dev mode toggle & populate */
+function toggleDevUI(on){
+  devEnabled = !!on;
+  document.getElementById('devEnableCheckbox').checked = devEnabled;
+  document.getElementById('devDrawer').style.display = devEnabled ? 'block' : 'none';
+  document.getElementById('devControls').style.display = devEnabled ? 'block' : 'none';
+  localStorage.setItem('dev_mode_enabled_v4', devEnabled? '1':'0');
+  if(devEnabled) populateDevSelects();
+}
+document.getElementById('devEnableCheckbox').addEventListener('change', (e)=> toggleDevUI(e.target.checked));
+
+function populateDevSelects(){
+  const giveFoodSelect = document.getElementById('giveFoodSelect');
+  giveFoodSelect.innerHTML = ITEMS.map(it=>`<option value="${it.name}">${it.emoji} ${it.name} (${it.rarity})</option>`).join('');
+  const comboSelect = document.getElementById('giveComboSelect');
+  comboSelect.innerHTML = COMBOS.map(c=>`<option value="${c.result}">🧩 ${c.result}</option>`).join('');
+  const devGive = document.getElementById('devGiveSelect');
+  devGive.innerHTML = ITEMS.map(it=>`<option value="${it.name}">${it.emoji} ${it.name}</option>`).join('');
+}
+
+document.getElementById('devDrawer').addEventListener('click', ()=> { /* keep open */ });
+
+/* dev actions */
+document.getElementById('giveFoodBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('giveFoodSelect').value;
+  state.inventory[name] = (state.inventory[name]||0)+1; state.foodDex.add(name); log(`[DEV] Gave food: ${name}`); saveState(); renderAll();
+});
+document.getElementById('giveComboBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('giveComboSelect').value;
+  state.inventory[name] = (state.inventory[name]||0)+1; state.foodDex.add(name); state.completedCombos.add(name); log(`[DEV] Gave combo result: ${name}`); saveState(); renderAll();
+});
+document.getElementById('forceCommon').addEventListener('click', ()=>{
+  const pool = ITEMS.filter(i=>i.rarity==='Common');
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  state.inventory[pick.name] = (state.inventory[pick.name]||0)+1; state.foodDex.add(pick.name); state.history.unshift({ts:new Date().toISOString(), name:pick.name, rarity:pick.rarity, display:`${pick.emoji} ${pick.name}`}); log(`[DEV] Forced Common: ${pick.name}`); saveState(); renderAll();
+});
+document.getElementById('forceMythic')?.addEventListener('click', ()=>{
+  const pool = ITEMS.filter(i=>i.rarity==='Mythic');
+  if(pool.length===0){ alert('No Mythic items in dataset.'); return; }
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  state.inventory[pick.name] = (state.inventory[pick.name]||0)+1; state.foodDex.add(pick.name); state.history.unshift({ts:new Date().toISOString(), name:pick.name, rarity:pick.rarity, display:`${pick.emoji} ${pick.name}`}); log(`[DEV] Forced Mythic: ${pick.name}`,'legendary');
+  // reset respective pity so you can simulate
+  state.pityMythic = 0; saveState(); renderAll();
+});
+document.getElementById('forceSecret')?.addEventListener('click', ()=>{
+  const pool = ITEMS.filter(i=>i.rarity==='Secret');
+  if(pool.length===0){ alert('No Secret items in dataset.'); return; }
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  state.inventory[pick.name] = (state.inventory[pick.name]||0)+1; state.foodDex.add(pick.name); state.history.unshift({ts:new Date().toISOString(), name:pick.name, rarity:pick.rarity, display:`${pick.emoji} ${pick.name}`}); log(`[DEV] Forced Secret: ${pick.name}`,'secret');
+  state.pitySecret = 0; saveState(); renderAll();
+});
+document.getElementById('revealRecipes').addEventListener('click', ()=>{
+  COMBOS.forEach(c=> { state.foodDex.add(c.result); state.completedCombos.add(c.result); }); log('[DEV] Revealed all recipes'); saveState(); renderAll();
+});
+document.getElementById('devReset').addEventListener('click', ()=>{
+  if(confirm('Reset save (dev)?')){ state = { inventory:{}, foodDex:new Set(), achievements:new Set(), completedCombos:new Set(), pulls:0, pityRarePlus:0, pityMythic:0, pitySecret:0, extraRolls:0, history:[] }; saveState(); renderAll(); log('[DEV] Reset performed'); }
+});
+document.getElementById('devGive')?.addEventListener('click', ()=>{
+  const name = document.getElementById('devGiveSelect').value;
+  state.inventory[name] = (state.inventory[name]||0)+1; state.foodDex.add(name); log(`[DEV] Gave: ${name}`); saveState(); renderAll();
+});
+
+/* ============================
+   live clock
+   ============================ */
+const clockEl = document.getElementById('liveClock');
+function tickClock(){ clockEl.innerText = formatTime(clock24); }
+setInterval(tickClock, 1000);
+tickClock();
+
+/* shooting star helper */
+function spawnShootingStar(){
+  const el = document.createElement('div');
+  el.style.position='fixed'; el.style.width='3px'; el.style.height='120px'; el.style.background='linear-gradient(90deg,rgba(255,255,255,1),transparent)';
+  el.style.zIndex=0; el.style.pointerEvents='none';
+  const top = 10 + Math.random()*window.innerHeight*0.45;
+  el.style.top = top + 'px';
+  el.style.left = (window.innerWidth + 50) + 'px';
+  el.style.transform = `rotate(${(20+Math.random()*40)*-1}deg)`;
+  document.body.appendChild(el);
+  const dur = 800 + Math.random()*1600;
+  el.animate([{transform:el.style.transform, opacity:1},{transform:`translate(-${window.innerWidth + 500}px, ${window.innerHeight}px) ${el.style.transform}`, opacity:0}],{duration:dur, easing:'linear'});
+  setTimeout(()=> el.remove(), dur+80);
+}
+
+/* ============================
+   init load + render
+   ============================ */
+window.addEventListener('load', ()=>{
+  loadState();
+  populateDevSelects();
+  // apply stored background overlay (if any)
+  const storedOpacity = getComputedStyle(document.documentElement).getPropertyValue('--bg-overlay') || 0.10;
+  document.getElementById('bgOpacity').value = parseFloat(storedOpacity);
+  document.getElementById('bgOverlay').style.background = `rgba(0,0,0,${parseFloat(storedOpacity)})`;
+
+  if(devEnabled){ toggleDevUI(true); document.getElementById('devDrawer').style.display='block'; }
+
+  // default background: floating foods
+  setBackgroundMode('floating');
+
+  renderAll();
+  log('Welcome — floating foods is the default theme. Open Settings to change visuals or enable Dev Mode.');
+  setInterval(()=> { if(Math.random()<0.45) spawnShootingStar(); }, 5400);
+});
+
+/* debugging helpers */
+window._state = ()=> state;
+window._forceAdd = (n)=>{ state.inventory[n]=(state.inventory[n]||0)+1; state.foodDex.add(n); log('[DEV] forced '+n); saveState(); renderAll(); }
+
+</script>
+</body>
+</html>
