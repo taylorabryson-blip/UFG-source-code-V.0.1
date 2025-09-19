@@ -1294,3 +1294,184 @@ window._forceAdd = (n)=>{ state.inventory[n]=(state.inventory[n]||0)+1; state.fo
 </script>
 </body>
 </html>
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Food Game — All In One</title>
+    <style>
+        /* --- Base Styles --- */
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #000;
+            --bg-overlay: 0.10;
+            --fg: #fff;
+            --card-bg: rgba(0, 0, 0, 0.75);
+            --accent: #fff;
+            --muted: rgba(255, 255, 255, 0.06);
+            --panel-w: 360px;
+            --glass: rgba(255, 255, 255, 0.03);
+            --ui-scale: 1;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            overflow-x: hidden;
+            position: relative;
+            transform: scale(var(--ui-scale));
+        }
+
+        /* --- Thunder Reward Styles --- */
+        body.thunder-bg {
+            background: linear-gradient(180deg, #1a1a21 0%, #f7e640 100%);
+            overflow: hidden;
+        }
+
+        .thunder-aura {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(circle at 50% 60%, rgba(255, 255, 80, 0.14), transparent 100%);
+            mix-blend-mode: screen;
+        }
+
+        .thunder-flash {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(180deg, rgba(255, 255, 80, 0.33) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.18s;
+        }
+
+        .thunder-cloud-emoji {
+            position: fixed;
+            z-index: 3;
+            font-size: 64px;
+            opacity: 0.85;
+            pointer-events: none;
+            filter: blur(0.5px) drop-shadow(0 6px 32px #000a);
+            animation: cloud-move 14s linear forwards;
+        }
+
+        @keyframes cloud-move {
+            0% {
+                opacity: 0;
+                transform: translateY(0) scale(0.82);
+            }
+            6% {
+                opacity: 0.85;
+            }
+            80% {
+                opacity: 0.85;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(16vh) scale(1.02);
+            }
+        }
+
+        .thunder-flash.active {
+            opacity: 1;
+        }
+
+        .thunder-clouds {
+            animation: rise 15s linear infinite;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(80vh) scale(0.6);
+                opacity: 0;
+            }
+            30% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-40vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="bgOverlay"></div>
+    <div id="floatArea"></div>
+    <div id="app">
+        <h1>Ultimate Food Game — All In One</h1>
+        <button id="thunderRewardBtn">Activate Thunder Reward</button>
+    </div>
+
+    <script>
+        // Helper function to generate random emojis
+        const emojis = ['⚡', '🌩️', '🌪️', '🔥', '🌈', '☁️'];
+        
+        // Function to trigger the thunder reward system
+        function triggerThunderReward() {
+            document.body.classList.add('thunder-bg');
+            
+            // Create thunder aura
+            const thunderAura = document.createElement('div');
+            thunderAura.classList.add('thunder-aura');
+            document.body.appendChild(thunderAura);
+
+            // Create random flashing thunder effect
+            const thunderFlash = document.createElement('div');
+            thunderFlash.classList.add('thunder-flash');
+            document.body.appendChild(thunderFlash);
+
+            setTimeout(() => {
+                thunderFlash.classList.add('active');
+                setTimeout(() => {
+                    thunderFlash.classList.remove('active');
+                }, 150);
+            }, 1000);
+
+            // Create random emoji clouds
+            for (let i = 0; i < 5; i++) {
+                const cloud = document.createElement('div');
+                cloud.classList.add('thunder-cloud-emoji');
+                cloud.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                cloud.style.left = `${Math.random() * 100}vw`;
+                cloud.style.top = `${Math.random() * 100}vh`;
+                document.body.appendChild(cloud);
+
+                // Animate the cloud
+                cloud.style.animationDuration = `${Math.random() * 5 + 10}s`; // Random duration for the rise
+            }
+
+            // Remove elements after the storm effect is complete
+            setTimeout(() => {
+                thunderAura.remove();
+                document.querySelectorAll('.thunder-cloud-emoji').forEach(cloud => cloud.remove());
+            }, 8000); // Remove everything after 8 seconds
+        }
+
+        // Random trigger with 0.1% chance every 3 seconds
+        setInterval(() => {
+            if (Math.random() < 0.001) { // 0.1% chance
+                triggerThunderReward();
+            }
+        }, 3000); // Check every 3 seconds
+
+        // Quick access button to manually trigger thunder reward
+        document.getElementById('thunderRewardBtn').addEventListener('click', triggerThunderReward);
+    </script>
+</body>
+</html>
