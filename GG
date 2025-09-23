@@ -120,6 +120,118 @@ h1{margin:10px 0 14px;text-align:center;font-size:20px}
 
 /* responsive tweaks */
 @media(max-width:980px){ #settingsDrawer{left:8px;right:8px;width:auto} }
+
+/* ⚙️ ULTIMATE SETTINGS STYLES */
+.settings-category { margin-bottom:20px; padding:10px; background:rgba(255,255,255,0.03); border-radius:8px; }
+.settings-category label { display:block; margin:8px 0; color:#ddd; cursor:pointer; }
+.settings-category input, .settings-category select { margin-left:8px; }
+
+/* 🎨 ORIGINAL BEAUTIFUL BACKGROUND THEMES */
+/* Golden Theme with Glitter */
+body.bg-golden {
+  background: linear-gradient(180deg, #2b1f00, #4b3000);
+}
+body.bg-golden .gold-glitter {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: screen;
+  background: 
+    radial-gradient(2px 2px at 20% 30%, rgba(255,215,0,0.8), transparent),
+    radial-gradient(3px 3px at 60% 70%, rgba(255,223,0,0.6), transparent),
+    radial-gradient(1px 1px at 80% 20%, rgba(255,215,0,0.9), transparent);
+  background-size: 200px 200px, 300px 300px, 150px 150px;
+  animation: goldGlitter 8s ease infinite;
+}
+@keyframes goldGlitter {
+  0%, 100% { opacity: 0.7; transform: translateY(0px); }
+  50% { opacity: 1; transform: translateY(-5px); }
+}
+
+/* Thunder/Lightning Theme */
+body.bg-thunder {
+  background: linear-gradient(180deg, #1a1a21 0%, #2a2a35 100%);
+  position: relative;
+}
+body.bg-thunder::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle at 50% 60%, rgba(135, 206, 250, 0.08), transparent 100%);
+  animation: thunderPulse 3s ease-in-out infinite;
+}
+@keyframes thunderPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* Aurora/Secret Theme */
+body.bg-aurora {
+  background: linear-gradient(180deg, #0b0010, #140018);
+  position: relative;
+}
+body.bg-aurora::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: 
+    radial-gradient(ellipse at 30% 20%, rgba(147, 0, 211, 0.15), transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(255, 20, 147, 0.12), transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(0, 191, 255, 0.08), transparent 60%);
+  animation: auroraShift 12s ease-in-out infinite;
+}
+@keyframes auroraShift {
+  0% { transform: translateX(-10%) rotate(-2deg); }
+  33% { transform: translateX(10%) rotate(1deg); }
+  66% { transform: translateX(-5%) rotate(-1deg); }
+  100% { transform: translateX(-10%) rotate(-2deg); }
+}
+
+/* Bubble Ocean Theme */
+body.bg-bubbles {
+  background: linear-gradient(180deg, #001122, #003366);
+}
+body.bg-bubbles .bubble-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Starfield Theme */
+body.bg-starfield {
+  background: linear-gradient(180deg, #0a0a1a, #1a1a2a);
+  position: relative;
+}
+body.bg-starfield::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: 
+    radial-gradient(1px 1px at 15% 25%, #fff, transparent),
+    radial-gradient(1px 1px at 85% 15%, #fff, transparent),
+    radial-gradient(2px 2px at 45% 75%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 75% 45%, #fff, transparent),
+    radial-gradient(1px 1px at 25% 85%, #fff, transparent);
+  background-size: 400px 400px, 300px 300px, 500px 500px, 200px 200px, 350px 350px;
+  animation: starTwinkle 15s linear infinite;
+}
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* Floating Particles Theme */
+body.bg-particles {
+  background: linear-gradient(180deg, #1a0030, #2a0050);
+}
 </style>
 </head>
 <body>
@@ -135,6 +247,7 @@ h1{margin:10px 0 14px;text-align:center;font-size:20px}
 
       <div class="controls">
         <button class="btn" id="roll1">🎲 Roll 1</button>
+        <button class="btn" id="rollEmergencyFridge" style="background:#4A90E2; display:none;">🧊 Emergency Fridge</button>
         <button class="btn" id="infoBtn">ℹ️ Drop Rates & Pity</button>
         <button class="btn" id="settingsBtn">⚙️ Settings</button>
       </div>
@@ -147,6 +260,7 @@ h1{margin:10px 0 14px;text-align:center;font-size:20px}
           <button class="btn" id="openDex">📖 Open Food Dex</button>
           <button class="btn" id="openAch">🏆 Open Achievements</button>
           <button class="btn" id="openCombos">🧩 Open Combos</button>
+          <button class="btn" id="playMiniGame" style="background:#9C27B0;">🎮 Mini-Game</button>
           <button class="btn" id="resetAll">🔄 Reset All Data</button>
         </div>
       </div>
@@ -158,6 +272,7 @@ h1{margin:10px 0 14px;text-align:center;font-size:20px}
         <div class="tab active" data-tab="foodsTab">Foods</div>
         <div class="tab" data-tab="achsTab">Achievements</div>
         <div class="tab" data-tab="combosTab">Combos</div>
+        <div class="tab" data-tab="settingsTab">⚙️ Settings</div>
         <div class="tab" data-tab="dropsTab">Drop Rates</div>
         <div class="tab" data-tab="devTab">Stats / Dev</div>
       </div>
@@ -190,6 +305,113 @@ h1{margin:10px 0 14px;text-align:center;font-size:20px}
           <div id="combosList"></div>
         </div>
 
+        <!-- ⚙️ ULTIMATE SETTINGS -->
+        <div id="settingsTab" class="tab-pane" style="display:none">
+          <div style="max-height:400px; overflow-y:auto;">
+            <h3 style="margin-top:0; color:#FFD700;">⚙️ Ultimate Settings</h3>
+            
+            <!-- 1. General Settings -->
+            <div class="settings-category">
+              <h4 style="color:#4CAF50;">🎵 General Settings</h4>
+              <label><input type="checkbox" id="soundEnabled"> Sound Effects</label><br>
+              <label><input type="checkbox" id="musicEnabled"> Background Music</label><br>
+              <label><input type="checkbox" id="animationsEnabled"> ✨ Animations</label><br>
+              <label>🔊 Sound Volume: <input type="range" id="soundVolume" min="0" max="100" style="width:100px;"></label><br>
+              <label>🎵 Music Volume: <input type="range" id="musicVolume" min="0" max="100" style="width:100px;"></label><br>
+              <label>📱 UI Scale: <input type="range" id="uiScale" min="80" max="150" style="width:100px;"> <span id="uiScaleValue">100%</span></label>
+            </div>
+
+            <!-- 2. Mobile Mode -->
+            <div class="settings-category">
+              <h4 style="color:#FF9800;">📱 Mobile Mode</h4>
+              <label><input type="checkbox" id="mobileMode"> 📲 Mobile UI Layout</label><br>
+              <label>✋ One-Hand Mode: 
+                <select id="oneHandMode">
+                  <option value="left">← Left</option>
+                  <option value="center">↕ Center</option>
+                  <option value="right">→ Right</option>
+                </select>
+              </label><br>
+              <label><input type="checkbox" id="swipeNavigation"> 👆 Swipe Navigation</label><br>
+              <label><input type="checkbox" id="compactDexMode"> 📖 Compact Dex Mode</label><br>
+              <label><input type="checkbox" id="offlineCaching"> 💾 Offline Caching</label>
+            </div>
+
+            <!-- 3. Offline Mode -->
+            <div class="settings-category">
+              <h4 style="color:#2196F3;">🌐 Offline Mode</h4>
+              <label><input type="checkbox" id="offlineRolls"> 🍜 Store Rolls Offline</label><br>
+              <label><input type="checkbox" id="offlineAchievements"> 🏆 Offline Achievements</label><br>
+              <label><input type="checkbox" id="offlineDexAccess"> 📚 Offline Dex Access</label><br>
+              <label><input type="checkbox" id="emergencyFridgeEnabled"> 🧊 Emergency Fridge</label><br>
+              <label><input type="checkbox" id="autoSync"> 🔄 Auto Sync When Online</label>
+            </div>
+
+            <!-- 4. Customization -->
+            <div class="settings-category">
+              <h4 style="color:#9C27B0;">🎨 Customization</h4>
+              <label>🌄 Background: 
+                <select id="backgroundTheme">
+                  <option value="default">🎯 Default Dark</option>
+                  <option value="golden">✨ Golden Glitter</option>
+                  <option value="thunder">⚡ Thunder Storm</option>
+                  <option value="aurora">🌌 Purple Aurora</option>
+                  <option value="bubbles">🫧 Ocean Bubbles</option>
+                  <option value="starfield">⭐ Starfield</option>
+                  <option value="particles">🔮 Floating Particles</option>
+                </select>
+              </label><br>
+              <label>🎨 Theme: 
+                <select id="themeMode">
+                  <option value="auto">🌓 Auto</option>
+                  <option value="light">☀️ Light</option>
+                  <option value="dark">🌙 Dark</option>
+                </select>
+              </label><br>
+              <label><input type="checkbox" id="floatingEmojis"> 🍣 Floating Emoji Effects</label><br>
+              <label>📑 Dex Layout: 
+                <select id="dexLayout">
+                  <option value="grid">📊 Grid View</option>
+                  <option value="list">📝 List View</option>
+                </select>
+              </label><br>
+              <label><input type="checkbox" id="foodVariants"> ✨ Shiny Food Variants</label>
+            </div>
+
+            <!-- 5. Performance -->
+            <div class="settings-category">
+              <h4 style="color:#795548;">⚡ Performance</h4>
+              <label><input type="checkbox" id="lowPowerMode"> 🔋 Low Power Mode</label><br>
+              <label><input type="checkbox" id="dataSaver"> 📶 Data Saver</label><br>
+              <label>🎮 FPS Limit: 
+                <select id="fpsLimit">
+                  <option value="30">30 FPS (Battery)</option>
+                  <option value="60">60 FPS (Smooth)</option>
+                </select>
+              </label><br>
+              <label>⏱️ Auto Save: <input type="range" id="autoSaveInterval" min="10" max="120" style="width:100px;"> <span id="autoSaveValue">30s</span></label>
+            </div>
+
+            <!-- 6. Extra Fun -->
+            <div class="settings-category">
+              <h4 style="color:#E91E63;">🎉 Extra Fun</h4>
+              <label><input type="checkbox" id="dailyLoginRewards"> 🎁 Daily Login Rewards</label><br>
+              <label><input type="checkbox" id="miniGamesEnabled"> 🎮 Mini-Games</label><br>
+              <label><input type="checkbox" id="experimentalFeatures"> 🧪 Experimental Features</label><br>
+              <label><input type="checkbox" id="mysteryBackgroundMode"> 🎲 Random Background</label><br>
+              <label><input type="checkbox" id="hiddenCodesEnabled"> 🗝️ Hidden Codes</label>
+            </div>
+
+            <div style="margin-top:20px; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px;">
+              <button class="btn" id="saveSettings" style="background:#4CAF50; margin-right:8px;">💾 Save Settings</button>
+              <button class="btn" id="resetSettings" style="background:#FF5722;">🔄 Reset to Defaults</button>
+              <div style="margin-top:8px; font-size:0.9em; color:#aaa;">
+                Settings are automatically saved and work offline!
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Drop Rates & Pity -->
         <div id="dropsTab" class="tab-pane" style="display:none">
           <h4 style="margin-top:0">Drop Rates & Pity</h4>
@@ -208,6 +430,24 @@ h1{margin:10px 0 14px;text-align:center;font-size:20px}
         <div id="devTab" class="tab-pane" style="display:none">
           <h4 style="margin-top:0">Quick Stats</h4>
           <div id="stats">Pulls: 0 · Pity(M): 0 · Pity(S): 0 · Extra Rolls: 0</div>
+          <!-- ⚡ ENERGY BAR -->
+          <div id="energyBar" style="margin-top:10px;">
+            <div style="background:#333; border-radius:10px; padding:2px;">
+              <div style="background:#4CAF50; height:20px; width:100%; border-radius:8px;"></div>
+            </div>
+            <div style="text-align:center; margin-top:5px;">⚡ Energy: 100/100</div>
+          </div>
+          <!-- 🎁 DAILY REWARD STATUS -->
+          <div id="dailyReward" style="margin-top:10px; text-align:center; color:#FFD700; font-weight:bold;">
+            🎁 Daily Reward: Ready to claim!
+          </div>
+          <!-- ⏰ LIVE CLOCK -->
+          <div id="liveClock" style="margin-top:8px; text-align:center; color:#4CAF50; font-weight:bold; padding:6px; background:rgba(76,175,80,0.1); border-radius:8px;">—</div>
+          <hr style="border-color:rgba(255,255,255,0.06)">
+          <h4>🏆 Personal Leaderboard</h4>
+          <div id="localLeaderboard" style="max-height:200px; overflow-y:auto; font-size:12px;">
+            Loading your best scores...
+          </div>
           <hr style="border-color:rgba(255,255,255,0.06)">
           <h4>Top Inventory</h4>
           <div id="quickInv">(empty)</div>
@@ -290,11 +530,7 @@ h1{margin:10px 0 14px;text-align:center;font-size:20px}
   </div>
 </div>
 
-<!-- dev gear floating button -->
-<div id="devGear" title="Dev Tools" style="display:none;position:fixed;right:14px;bottom:84px;width:56px;height:56px;border-radius:28px;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;z-index:10002;box-shadow:0 6px 18px rgba(0,0,0,0.4);cursor:pointer;">⚙️</div>
 
-<!-- live clock -->
-<div id="liveClock" style="position:fixed;right:16px;bottom:14px;padding:8px 12px;border-radius:10px;background:var(--card-bg);border:2px solid var(--accent);z-index:9998;font-weight:800">—</div>
 
 <script>
 /* ============================
@@ -362,7 +598,42 @@ const ITEMS = (()=>{
     "Tempura|🍤|Uncommon","Okra Curry|🍛|Common","Sesame Ball|🍡|Common","Moonshine|🥃|Rare","Coconut Rice|🍚|Common",
     "Mango Sticky Rice|🥭|Uncommon","Coconut Curry|🥥|Uncommon","Thai Green Curry|🍛|Rare","Pad Thai|🍜|Uncommon",
     "Laksa|🍜|Uncommon","Malai Kofta|🍛|Uncommon","Chaat|🥪|Common","Bhel Puri|🍚|Common","Pavlova|🍰|Rare",
-    "Custard Tart|🥧|Uncommon","Corn Pudding|🌽|Common","Brown Butter|🧈|Common","Clarified Butter|🧈|Common","Ghee|🧈|Common"
+    "Custard Tart|🥧|Uncommon","Corn Pudding|🌽|Common","Brown Butter|🧈|Common","Clarified Butter|🧈|Common","Ghee|🧈|Common",
+    // NEW INTERNATIONAL FOODS
+    "Dim Sum|🥟|Uncommon","Jollof Rice|🍚|Rare","Arepa|🫓|Uncommon","Baklava|🍯|Rare","Chow Mein|🍜|Uncommon",
+    "Doner Kebab|🥙|Uncommon","Dumpling Soup|🥟|Uncommon","Tiramisu|🍰|Rare","Plantain Chips|🍌|Common","Moqueca|🥘|Rare",
+    "Lobster Roll|🦞|Legendary","Haggis|🥩|Rare",
+    // NEW DRINKS
+    "Thai Iced Tea|🧋|Uncommon","Boba Milk Tea|🧋|Uncommon","Horchata|🥛|Uncommon","Mojito|🍹|Uncommon","Mate Tea|🍵|Uncommon",
+    "Caipirinha|🍹|Uncommon","Piña Colada|🍍|Rare","Bubble Coffee|☕|Uncommon","Agua Fresca|🥤|Common",
+    // NEW MYTHIC/SECRET FOODS
+    "Phoenix Egg Soup|🔥|Secret","Leviathan Sushi Roll|🐉|Secret","Ambrosia Cake|🍇|Mythic","Elven Bread|🌿|Secret",
+    "Dragonfruit Cocktail|🐲|Secret","Golden Noodle|🍜|Secret","Spirit Dumpling|👻|Secret","Cloud Cotton Candy|☁️|Mythic",
+    "Eternal Chocolate|🍫|Secret","Cosmic Pizza|🌌|Secret",
+    // MORE INTERNATIONAL FOODS
+    "Fish and Chips|🍟|Common","Shepherd's Pie|🥧|Uncommon","Bangers and Mash|🌭|Common","Yorkshire Pudding|🍮|Uncommon",
+    "Coq au Vin|🍷|Rare","Ratatouille|🍆|Uncommon","Bouillabaisse|🍲|Rare","Escargot|🐌|Rare",
+    "Paella|🥘|Rare","Gazpacho|🍅|Uncommon","Tapas|🍤|Uncommon","Churros|🍩|Common",
+    "Schnitzel|🥩|Uncommon","Bratwurst|🌭|Common","Sauerkraut|🥬|Common","Black Forest Cake|🍰|Legendary",
+    "Risotto|🍚|Uncommon","Osso Buco|🍖|Rare","Gelato|🍨|Uncommon","Cannoli|🥐|Uncommon",
+    "Sashimi|🍣|Rare","Tempura|🍤|Uncommon","Miso Ramen|🍜|Uncommon","Katsu Curry|🍛|Uncommon",
+    "Kimchi Fried Rice|🍚|Uncommon","Bulgogi|🥩|Uncommon","Korean BBQ|🥓|Uncommon","Hotteok|🥞|Common",
+    "Tom Yum|🍲|Uncommon","Som Tam|🥗|Common","Mango Sticky Rice|🥭|Uncommon","Pad See Ew|🍜|Common",
+    "Pho Bo|🍜|Uncommon","Banh Xeo|🥞|Common","Vietnamese Spring Rolls|🥗|Common","Ca Phe Sua Da|☕|Common",
+    "Rendang|🍛|Rare","Nasi Goreng|🍚|Common","Satay|🍢|Common","Gado Gado|🥗|Common",
+    // MORE DESSERTS & SWEETS
+    "Macarons|🍪|Rare","Opera Cake|🍰|Legendary","Mille-feuille|🥐|Rare","Profiteroles|🧁|Uncommon",
+    "Tres Leches|🍰|Uncommon","Flan|🍮|Uncommon","Dulce de Leche|🍯|Common","Alfajores|🍪|Common",
+    "Gulab Jamun|🍡|Uncommon","Rasgulla|🍡|Common","Kulfi|🍨|Uncommon","Jalebi|🍯|Common",
+    "Mochi Ice Cream|🍡|Rare","Dorayaki|🥞|Common","Taiyaki|🐟|Uncommon","Melon Pan|🍈|Common",
+    // MORE STREET FOODS
+    "Corn Dog|🌭|Common","Funnel Cake|🍰|Uncommon","Cotton Candy|🍭|Common","Kettle Corn|🍿|Common",
+    "Beignets|🍩|Uncommon","Po'boy|🥖|Common","Jambalaya|🍚|Uncommon","Gumbo|🍲|Uncommon",
+    "Elote|🌽|Common","Tostada|🌮|Common","Quesadilla|🧀|Common","Torta|🥪|Common",
+    "Patty|🍔|Common","Jerk Chicken|🍗|Uncommon","Plantain|🍌|Common","Doubles|🥪|Common",
+    // SPECIALTY DRINKS
+    "Lassi|🥛|Common","Chai Latte|☕|Uncommon","Turkish Coffee|☕|Uncommon","Greek Frappe|☕|Common",
+    "Bubble Tea|🧋|Common","Matcha Latte|🍵|Uncommon","Vietnamese Iced Coffee|☕|Common","Masala Chai|🍵|Common"
   ];
   // Expand to numbered entries and parse tokens
   const items = [];
@@ -415,36 +686,67 @@ const COMBOS = [
   {req:["033 Cheese","005 Bread"], result:"Cheese Toast", achievement:"🧀 Toasty Bite", desc:"Classic cheesy toast."},
   {req:["020 Mango","010 Pineapple"], result:"Mango Pine Parfait", achievement:"🥭 Sunny Parfait", desc:"Layered tropical parfait."},
   {req:["144 Celestial Sorbet","043 Ice Cream"], result:"Astral Sundae", achievement:"🌌 Starlit Chef", desc:"Sundae with cosmic sorbet."},
-  {req:["133 Golden Truffle","143 Golden Truffle"], result:"Double Truffle", achievement:"💎 Truffle Overload", desc:"Two truffles make magic."}
+  {req:["133 Golden Truffle","143 Golden Truffle"], result:"Double Truffle", achievement:"💎 Truffle Overload", desc:"Two truffles make magic."},
+  // NEW USER COMBOS
+  {req:["Jollof Rice","Plantain Chips"], result:"West African Feast", achievement:"🌍 African Fusion", desc:"Traditional Nigerian rice with plantains."},
+  {req:["Boba Milk Tea","Thai Iced Tea"], result:"Asian Tea Fusion", achievement:"🧋 Tea Master", desc:"Two tea cultures combined."},
+  {req:["Phoenix Egg Soup","Elven Bread"], result:"Mystical Meal", achievement:"🔮 Fantasy Chef", desc:"Legendary foods from ancient realms."},
+  {req:["Mojito","Piña Colada"], result:"Tropical Paradise", achievement:"🏖️ Beach Vibes", desc:"Ultimate vacation drink combo."},
+  {req:["Dim Sum","Doner Kebab"], result:"East Meets West", achievement:"🥟 Cultural Bridge", desc:"Asian and Turkish fusion."}
 ];
 
 /* ============================
    achievements (20+) with checks
    ============================ */
 const ACHIEVEMENTS = [
-  {id:"collect10", title:"Fruit Collector I", desc:"Collect 10 different foods", check:(s)=> s.foodDex.size>=10, reward:{extraRolls:0}},
-  {id:"collect25", title:"Fruit Collector II", desc:"Collect 25 different foods", check:(s)=> s.foodDex.size>=25, reward:{extraRolls:1}},
-  {id:"collect50", title:"Collector", desc:"Collect 50 different foods", check:(s)=> s.foodDex.size>=50, reward:{extraRolls:2}},
-  {id:"rare3", title:"🍳 Rare Collector", desc:"Collect 3 rare items", check:(s)=> ITEMS.filter(i=>i.rarity==='Rare').map(i=>i.name).filter(n=> s.foodDex.has(n)).length>=3, reward:{}},
-  {id:"legendary1", title:"🌟 Legendary Find", desc:"Pull any Legendary item", check:(s)=> [...s.foodDex].some(n=> ITEMS.find(it=>it.name===n && it.rarity==='Legendary')), reward:{extraRolls:1}},
-  {id:"secret1", title:"✨ Secret Seeker", desc:"Find any Secret item", check:(s)=> [...s.foodDex].some(n=> ITEMS.find(it=>it.name===n && it.rarity==='Secret')), reward:{}},
-  {id:"mythic1", title:"🌌 Mythic Hunter", desc:"Obtain a Mythic item", check:(s)=> [...s.foodDex].some(n=> ITEMS.find(it=>it.name===n && it.rarity==='Mythic')), reward:{extraRolls:2}},
-  {id:"combo1", title:"🧩 Combo Starter", desc:"Complete 1 combo", check:(s)=> s.completedCombos.size>=1, reward:{}},
-  {id:"combo5", title:"🧩 Combo Apprentice", desc:"Complete 5 combos", check:(s)=> s.completedCombos.size>=5, reward:{extraRolls:1}},
-  {id:"golden_bg", title:"👑 Golden Unlock", desc:"Obtain GOLDEN Nugget to unlock Gold background", check:(s)=> [...s.foodDex].some(n=> n.includes("GOLDEN Nugget")), reward:{}},
-  {id:"dexMaster", title:"🍽 Master Chef", desc:"Collect all foods & combos", check:(s)=>{
+  {id:"collect10", title:"Fruit Collector I", desc:"Collect 10 different foods", tip:"Keep rolling! You'll get 10 different foods naturally as you play.", check:(s)=> s.foodDex.size>=10, reward:{extraRolls:0}},
+  {id:"collect25", title:"Fruit Collector II", desc:"Collect 25 different foods", tip:"Continue rolling to expand your collection. Each new food counts!", check:(s)=> s.foodDex.size>=25, reward:{extraRolls:1}},
+  {id:"collect50", title:"Collector", desc:"Collect 50 different foods", tip:"You're halfway to being a food master! Keep rolling for more variety.", check:(s)=> s.foodDex.size>=50, reward:{extraRolls:2}},
+  {id:"rare3", title:"🍳 Rare Collector", desc:"Collect 3 rare items", tip:"Look for blue-highlighted rare foods like Lobster, Tiramisu, and Jollof Rice!", check:(s)=> ITEMS.filter(i=>i.rarity==='Rare').map(i=>i.name).filter(n=> s.foodDex.has(n)).length>=3, reward:{}},
+  {id:"legendary1", title:"🌟 Legendary Find", desc:"Pull any Legendary item", tip:"Legendary foods are very rare! Look for golden items like Pancakes, French Fries, or Lobster Roll.", check:(s)=> [...s.foodDex].some(n=> ITEMS.find(it=>it.name===n && it.rarity==='Legendary')), reward:{extraRolls:1}},
+  {id:"secret1", title:"✨ Secret Seeker", desc:"Find any Secret item", tip:"Secret foods have rainbow colors! Try rolling many times - pity system helps after 10,000 rolls.", check:(s)=> [...s.foodDex].some(n=> ITEMS.find(it=>it.name===n && it.rarity==='Secret')), reward:{}},
+  {id:"mythic1", title:"🌌 Mythic Hunter", desc:"Obtain a Mythic item", tip:"Mythic foods are ultra-rare! Look for fantasy items like Ambrosia Cake or Cloud Cotton Candy.", check:(s)=> [...s.foodDex].some(n=> ITEMS.find(it=>it.name===n && it.rarity==='Mythic')), reward:{extraRolls:2}},
+  {id:"combo1", title:"🧩 Combo Starter", desc:"Complete 1 combo", tip:"Check the Combos tab! Get ingredients like Apple + Chocolate Cake to make combos.", check:(s)=> s.completedCombos.size>=1, reward:{}},
+  {id:"combo5", title:"🧩 Combo Apprentice", desc:"Complete 5 combos", tip:"Mix different foods! Try combinations like Cheese + Bread, or Mango + Pineapple.", check:(s)=> s.completedCombos.size>=5, reward:{extraRolls:1}},
+  {id:"golden_bg", title:"👑 Golden Unlock", desc:"Obtain GOLDEN Nugget to unlock Gold background", tip:"GOLDEN Nugget is a mythic item! Keep rolling - it unlocks special golden theme.", check:(s)=> [...s.foodDex].some(n=> n.includes("GOLDEN Nugget")), reward:{}},
+  {id:"dexMaster", title:"🍽 Master Chef", desc:"Collect all foods & combos", tip:"The ultimate challenge! Collect every single food and complete every combo recipe.", check:(s)=>{
     const totalFoods = ITEMS.length + COMBOS.length;
     const known = s.foodDex.size + s.completedCombos.size;
     return known>=totalFoods;
   }, reward:{extraRolls:5}},
   // More filler achievements...
-  {id:"snacklover", title:"🍿 Snack Lover", desc:"Collect 20 snack items", check:(s)=> s.foodDex.size>=20, reward:{}},
-  {id:"baker", title:"🥐 Baker", desc:"Collect 8 bakery items", check:(s)=> ITEMS.filter(i=> i.name.toLowerCase().includes('cake') || i.name.toLowerCase().includes('donut') || i.name.toLowerCase().includes('pancake')).filter(i=> s.foodDex.has(i.name)).length>=1, reward:{}},
-  {id:"global", title:"🌍 World Taster", desc:"Collect foods from 10 different cuisines", check:(s)=> s.foodDex.size>=30, reward:{}},
-  {id:"firstPull", title:"🎉 First Pull", desc:"Make your first pull", check:(s)=> s.pulls>=1, reward:{extraRolls:0}},
-  {id:"historyCollector", title:"🕘 Historian", desc:"Keep 100 items in history", check:(s)=> s.history.length>=100, reward:{}},
-  {id:"lucky100", title:"🍀 Lucky Hundred", desc:"Make 100 pulls", check:(s)=> s.pulls>=100, reward:{extraRolls:2}},
-  {id:"devUnlocked", title:"🛠️ Dev Friend", desc:"Enable Dev Mode", check:(s)=> s.devEnabled, reward:{}}
+  {id:"snacklover", title:"🍿 Snack Lover", desc:"Collect 20 snack items", tip:"Roll for snacks and treats! Any food counts towards your collection.", check:(s)=> s.foodDex.size>=20, reward:{}},
+  {id:"baker", title:"🥐 Baker", desc:"Collect 8 bakery items", tip:"Look for foods with 'cake', 'donut', or 'pancake' in the name!", check:(s)=> ITEMS.filter(i=> i.name.toLowerCase().includes('cake') || i.name.toLowerCase().includes('donut') || i.name.toLowerCase().includes('pancake')).filter(i=> s.foodDex.has(i.name)).length>=1, reward:{}},
+  {id:"global", title:"🌍 World Taster", desc:"Collect foods from 10 different cuisines", tip:"Try international foods! Look for dishes from different countries and cultures.", check:(s)=> s.foodDex.size>=30, reward:{}},
+  {id:"firstPull", title:"🎉 First Pull", desc:"Make your first pull", tip:"Click the '🎲 Roll 1' button to make your first roll!", check:(s)=> s.pulls>=1, reward:{extraRolls:0}},
+  {id:"historyCollector", title:"🕘 Historian", desc:"Keep 100 items in history", tip:"Keep rolling! Your pull history will grow automatically as you play.", check:(s)=> s.history.length>=100, reward:{}},
+  {id:"lucky100", title:"🍀 Lucky Hundred", desc:"Make 100 pulls", tip:"Keep clicking that roll button! Every pull counts towards this achievement.", check:(s)=> s.pulls>=100, reward:{extraRolls:2}},
+  {id:"devUnlocked", title:"🛠️ Dev Friend", desc:"Enable Dev Mode", tip:"Go to Stats/Dev tab and check 'Enable Developer Mode' to unlock dev tools.", check:(s)=> s.devEnabled, reward:{}},
+  // NEW USER ACHIEVEMENTS
+  {id:"rareBite", title:"🍳 Rare Bite", desc:"Get your first rare item", tip:"Rare foods appear in blue! Look for items like Steak, Oysters, or Baklava.", check:(s)=> [...s.foodDex].some(n=> ITEMS.find(it=>it.name===n && it.rarity==='Rare')), reward:{extraRolls:1}},
+  {id:"legendaryChef", title:"⭐ Legendary Chef", desc:"Unlock 3 legendary foods", tip:"Legendary foods are golden! Try to get Pancakes, French Fries, and Lobster Roll.", check:(s)=> ITEMS.filter(i=>i.rarity==='Legendary').map(i=>i.name).filter(n=> s.foodDex.has(n)).length>=3, reward:{extraRolls:2}},
+  {id:"doubleLuck", title:"🍀 Double Luck", desc:"Roll the same food twice in a row", tip:"Pure luck! Keep rolling and eventually you'll get the same food twice in a row.", check:(s)=> s.history.length>=2 && s.history[0].name===s.history[1].name, reward:{extraRolls:1}},
+  {id:"worldTour", title:"🌍 World Tour", desc:"Collect foods from around the world", tip:"Collect 40 different foods! Try international cuisines like Dim Sum, Paella, and Jollof Rice.", check:(s)=> s.foodDex.size>=40, reward:{extraRolls:1}},
+  {id:"foodGod", title:"👑 Food God", desc:"Collect all secret foods", tip:"The ultimate challenge! Find every rainbow-colored secret food in the game.", check:(s)=> ITEMS.filter(i=>i.rarity==='Secret').map(i=>i.name).every(n=> s.foodDex.has(n)), reward:{extraRolls:5}},
+  {id:"epicurean", title:"🍽️ Epicurean", desc:"Unlock 75 different foods", tip:"You're becoming a true food expert! Keep rolling to expand your culinary knowledge.", check:(s)=> s.foodDex.size>=75, reward:{extraRolls:3}},
+  {id:"mythicCollector", title:"🌌 Mythic Master", desc:"Collect all mythic foods", tip:"Find all mythic items like Ambrosia Cake, Cloud Cotton Candy, and GOLDEN Nugget!", check:(s)=> ITEMS.filter(i=>i.rarity==='Mythic').map(i=>i.name).every(n=> s.foodDex.has(n)), reward:{extraRolls:10}},
+  // MORE THEMED ACHIEVEMENTS
+  {id:"streetFoodie", title:"🚚 Street Foodie", desc:"Collect 15 street foods", tip:"Get 35 different foods total! Street foods include Corn Dogs, Elote, and Food Truck favorites.", check:(s)=> s.foodDex.size>=35, reward:{extraRolls:1}},
+  {id:"sweetTooth", title:"🍭 Sweet Tooth", desc:"Collect 10 desserts and sweets", tip:"Look for foods with 'cake', 'ice cream', or 'cookie' in their names!", check:(s)=> ITEMS.filter(i=> i.name.toLowerCase().includes('cake') || i.name.toLowerCase().includes('ice cream') || i.name.toLowerCase().includes('cookie')).filter(i=> s.foodDex.has(i.name)).length>=3, reward:{extraRolls:1}},
+  {id:"worldTraveler", title:"✈️ World Traveler", desc:"Collect foods from 8 different continents", tip:"Explore global cuisines! Get 50 different foods from around the world.", check:(s)=> s.foodDex.size>=50, reward:{extraRolls:2}},
+  {id:"drinkConnoisseur", title:"🍹 Drink Master", desc:"Collect 12 different beverages", tip:"Find drinks with 'tea', 'coffee', or 'latte' in their names! Try Boba Tea, Mojito, Horchata.", check:(s)=> ITEMS.filter(i=> i.name.toLowerCase().includes('tea') || i.name.toLowerCase().includes('coffee') || i.name.toLowerCase().includes('latte')).filter(i=> s.foodDex.has(i.name)).length>=2, reward:{extraRolls:1}},
+  {id:"fantasyFeast", title:"🐉 Fantasy Feast", desc:"Collect all mythical foods", tip:"Find fantasy foods: Phoenix Egg Soup, Leviathan Sushi Roll, Elven Bread, and Spirit Dumpling!", check:(s)=> ['Phoenix Egg Soup','Leviathan Sushi Roll','Elven Bread','Spirit Dumpling'].some(n=> [...s.foodDex].some(name=> name.includes(n))), reward:{extraRolls:3}},
+  {id:"culturalExplorer", title:"🌏 Cultural Explorer", desc:"Try foods from Asia, Europe, Africa, and Americas", tip:"Collect 60 different foods from diverse cultures and continents!", check:(s)=> s.foodDex.size>=60, reward:{extraRolls:2}},
+  {id:"rareCollector", title:"💎 Rare Collection", desc:"Collect 8 rare items", tip:"Blue rare foods include: Tiramisu, Bouillabaisse, Black Forest Cake, and more!", check:(s)=> ITEMS.filter(i=>i.rarity==='Rare').map(i=>i.name).filter(n=> s.foodDex.has(n)).length>=8, reward:{extraRolls:2}},
+  {id:"comboMaster", title:"🧩 Combo Master", desc:"Complete 10 different combos", tip:"Check Combos tab for recipes! Mix ingredients like Jollof Rice + Plantain Chips.", check:(s)=> s.completedCombos.size>=10, reward:{extraRolls:3}},
+  {id:"epicGourmet", title:"🌟 Epic Gourmet", desc:"Collect 100 different foods", tip:"A major milestone! You're becoming a true culinary master with 100 foods.", check:(s)=> s.foodDex.size>=100, reward:{extraRolls:5}},
+  {id:"ultimateFoodie", title:"👑 Ultimate Foodie", desc:"Master of all cuisines - collect 150 foods", tip:"The ultimate achievement! Master every cuisine and collect 150+ different foods.", check:(s)=> s.foodDex.size>=150, reward:{extraRolls:10}},
+  {id:"luckStreak", title:"🍀 Lucky Streak", desc:"Get 3 rare or higher items in 10 pulls", tip:"You need some luck! Try to get 3 blue, golden, rainbow, or mythic items in your last 10 rolls.", check:(s)=> s.history.slice(0,10).filter(h=> ['Rare','Legendary','Secret','Mythic'].includes(h.rarity)).length>=3, reward:{extraRolls:2}},
+  {id:"midnightSnack", title:"🌙 Midnight Snacker", desc:"Roll for food late at night", tip:"Roll any time of day! This unlocks automatically when you make your first pull.", check:(s)=> s.pulls>=1, reward:{}},
+  // SHINY FOOD ACHIEVEMENTS
+  {id:"firstShiny", title:"✨ First Sparkle", desc:"Find your first shiny variant food", tip:"Shiny foods have a 5% chance! Keep rolling and you'll find one sparkling!", check:(s)=> s.shinyFoods.size>=1, reward:{extraRolls:1}},
+  {id:"shinyCollector", title:"✨ Shiny Hunter", desc:"Collect 5 different shiny foods", tip:"Keep rolling! Any food can be shiny - you need 5 different sparkling foods.", check:(s)=> s.shinyFoods.size>=5, reward:{extraRolls:2}},
+  {id:"shinyMaster", title:"✨ Sparkle Master", desc:"Collect 10 different shiny foods", tip:"The ultimate shiny collector! Get 10 different foods in their sparkling variants.", check:(s)=> s.shinyFoods.size>=10, reward:{extraRolls:5}}
 ];
 
 /* ============================
@@ -463,7 +765,65 @@ let state = {
   history: [],
   firstObtainedAt: {}, // name -> timestamp
   devEnabled: false,
-  goldenUnlocked: false
+  goldenUnlocked: false,
+  // NEW OFFLINE & GAMEPLAY FEATURES
+  shinyFoods: new Set(), // tracks shiny variant foods
+  energy: 100, // energy/stamina system (max 100)
+  lastEnergyUpdate: null, // for offline energy regeneration
+  dailyRewardDate: null, // tracks daily reward claims
+  emergencyFridge: 0, // bonus rolls when offline
+  fusionUnlocks: new Set(), // custom fusion combinations
+  localLeaderboard: [], // offline personal bests
+  offlineTime: 0, // time spent offline
+  // Emergency Fridge & Offline Detection
+  isOfflineMode: false,
+  lastOnlineTime: Date.now(),
+  offlineStartTime: null,
+  
+  // ⚙️ ULTIMATE SETTINGS SYSTEM
+  settings: {
+    // 1. General Settings
+    soundEnabled: true,
+    musicEnabled: true,
+    animationsEnabled: true,
+    soundVolume: 70,
+    musicVolume: 50,
+    uiScale: 100, // percentage
+    
+    // 2. Mobile Mode
+    mobileMode: false,
+    oneHandMode: 'center', // 'left', 'center', 'right'
+    swipeNavigation: false,
+    compactDexMode: false,
+    offlineCaching: true,
+    
+    // 3. Offline Mode
+    offlineRolls: true,
+    offlineAchievements: true,
+    offlineDexAccess: true,
+    emergencyFridgeEnabled: true,
+    autoSync: true,
+    
+    // 4. Customization
+    backgroundTheme: 'default', // 'default', 'jojo', 'anime', 'fantasy', etc.
+    themeMode: 'auto', // 'light', 'dark', 'auto'
+    floatingEmojis: true,
+    dexLayout: 'grid', // 'grid', 'list'
+    foodVariants: true,
+    
+    // 5. Performance
+    lowPowerMode: false,
+    dataSaver: false,
+    fpsLimit: 60, // 30 or 60
+    autoSaveInterval: 30, // seconds
+    
+    // 6. Extra Fun
+    dailyLoginRewards: true,
+    miniGamesEnabled: true,
+    experimentalFeatures: false,
+    mysteryBackgroundMode: false,
+    hiddenCodesEnabled: true
+  }
 };
 let speedMode = false;
 let clock24 = false;
@@ -482,7 +842,18 @@ function saveState(){
     history: state.history,
     firstObtainedAt: state.firstObtainedAt,
     devEnabled: state.devEnabled,
-    goldenUnlocked: state.goldenUnlocked
+    goldenUnlocked: state.goldenUnlocked,
+    // NEW FEATURES
+    shinyFoods: [...state.shinyFoods],
+    energy: state.energy,
+    lastEnergyUpdate: state.lastEnergyUpdate,
+    dailyRewardDate: state.dailyRewardDate,
+    emergencyFridge: state.emergencyFridge,
+    fusionUnlocks: [...state.fusionUnlocks],
+    localLeaderboard: state.localLeaderboard,
+    offlineTime: state.offlineTime,
+    // Ultimate Settings
+    settings: state.settings
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
   localStorage.setItem('dev_mode_enabled_final', state.devEnabled? '1':'0');
@@ -506,6 +877,29 @@ function loadState(){
       state.firstObtainedAt = p.firstObtainedAt || {};
       state.devEnabled = p.devEnabled || false;
       state.goldenUnlocked = p.goldenUnlocked || false;
+      // NEW FEATURES
+      state.shinyFoods = new Set(p.shinyFoods || []);
+      state.energy = p.energy || 100;
+      state.lastEnergyUpdate = p.lastEnergyUpdate || Date.now();
+      state.dailyRewardDate = p.dailyRewardDate;
+      state.emergencyFridge = p.emergencyFridge || 0;
+      state.fusionUnlocks = new Set(p.fusionUnlocks || []);
+      state.localLeaderboard = p.localLeaderboard || [];
+      state.offlineTime = p.offlineTime || 0;
+      // Ultimate Settings (with defaults)
+      state.settings = Object.assign({
+        soundEnabled: true, musicEnabled: true, animationsEnabled: true,
+        soundVolume: 70, musicVolume: 50, uiScale: 100,
+        mobileMode: false, oneHandMode: 'center', swipeNavigation: false,
+        compactDexMode: false, offlineCaching: true,
+        offlineRolls: true, offlineAchievements: true, offlineDexAccess: true,
+        emergencyFridgeEnabled: true, autoSync: true,
+        backgroundTheme: 'default', themeMode: 'auto', floatingEmojis: true,
+        dexLayout: 'grid', foodVariants: true,
+        lowPowerMode: false, dataSaver: false, fpsLimit: 60, autoSaveInterval: 30,
+        dailyLoginRewards: true, miniGamesEnabled: true, experimentalFeatures: false,
+        mysteryBackgroundMode: false, hiddenCodesEnabled: true
+      }, p.settings || {});
     }
     // persist dev flag
     const dv = localStorage.getItem('dev_mode_enabled_final')==='1';
@@ -534,6 +928,491 @@ function formatTime(fmt24){
     return `${hh}:${mm}:${ss} ${am? 'AM':'PM'}`;
   }
 }
+/* ============================
+   DAILY REWARD CLOCK SYSTEM
+   ============================ */
+function checkDailyReward() {
+  const today = new Date().toDateString(); // e.g., "Mon Dec 25 2023"
+  const lastRewardDate = state.dailyRewardDate;
+  
+  if(lastRewardDate !== today) {
+    // New day! Give daily rewards
+    state.dailyRewardDate = today;
+    
+    // Calculate consecutive days (rough estimate)
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const wasYesterday = lastRewardDate === yesterday.toDateString();
+    
+    // Daily rewards: energy + extra rolls
+    const energyReward = 50;
+    const rollReward = wasYesterday ? 3 : 1; // bonus for consecutive days
+    
+    state.energy = Math.min(100, state.energy + energyReward);
+    state.extraRolls += rollReward;
+    
+    const streakText = wasYesterday ? " (Consecutive day bonus!)" : "";
+    log(`🎁 Daily Reward! +${energyReward} Energy, +${rollReward} Extra Rolls${streakText}`, 'legendary');
+    createConfetti(60);
+    
+    return true; // claimed reward today
+  }
+  return false; // already claimed today
+}
+
+function getDailyRewardStatus() {
+  const today = new Date().toDateString();
+  const claimed = state.dailyRewardDate === today;
+  const now = new Date();
+  const nextMidnight = new Date(now);
+  nextMidnight.setDate(nextMidnight.getDate() + 1);
+  nextMidnight.setHours(0, 0, 0, 0);
+  const hoursUntilReset = Math.ceil((nextMidnight - now) / (1000 * 60 * 60));
+  
+  return {
+    claimed,
+    hoursUntilReset,
+    canClaim: !claimed
+  };
+}
+
+/* ============================
+   COOKING FUSION SYSTEM
+   ============================ */
+function generateFusionName(food1, food2) {
+  // Create unique fusion names by combining foods creatively
+  const prefixes = ['Super', 'Ultra', 'Mega', 'Divine', 'Cosmic', 'Fusion', 'Hybrid', 'Golden'];
+  const suffixes = ['Delight', 'Supreme', 'Burst', 'Blast', 'Wonder', 'Dream', 'Magic', 'Fusion'];
+  
+  const item1 = findItem(food1);
+  const item2 = findItem(food2);
+  if(!item1 || !item2) return null;
+  
+  // Use higher rarity to determine fusion strength
+  const rarities = ['Common', 'Uncommon', 'Rare', 'Legendary', 'Mythic', 'Secret'];
+  const rarity1Level = rarities.indexOf(item1.rarity);
+  const rarity2Level = rarities.indexOf(item2.rarity);
+  const maxRarity = Math.max(rarity1Level, rarity2Level);
+  
+  // Generate fusion name based on rarity levels
+  const prefix = prefixes[Math.min(maxRarity, prefixes.length-1)];
+  const suffix = suffixes[Math.min(maxRarity, suffixes.length-1)];
+  
+  // Combine food names creatively
+  const word1 = food1.split(' ').pop(); // get last word
+  const word2 = food2.split(' ').pop(); // get last word
+  
+  return `${prefix} ${word1}-${word2} ${suffix}`;
+}
+
+function attemptFusion(food1, food2) {
+  if(!state.inventory[food1] || !state.inventory[food2]) {
+    return { success: false, message: "❌ Missing ingredients for fusion!" };
+  }
+  
+  if(food1 === food2) {
+    return { success: false, message: "❌ Cannot fuse identical foods!" };
+  }
+  
+  // Generate unique fusion result
+  const fusionName = generateFusionName(food1, food2);
+  if(!fusionName) {
+    return { success: false, message: "❌ These foods cannot be fused!" };
+  }
+  
+  // Check if already discovered this fusion
+  const fusionKey = [food1, food2].sort().join(' + ');
+  const alreadyKnown = state.fusionUnlocks.has(fusionKey);
+  
+  // Fusion success chance based on rarity levels
+  const item1 = findItem(food1);
+  const item2 = findItem(food2);
+  const rarities = ['Common', 'Uncommon', 'Rare', 'Legendary', 'Mythic', 'Secret'];
+  const avgRarity = (rarities.indexOf(item1.rarity) + rarities.indexOf(item2.rarity)) / 2;
+  const successChance = 0.6 + (avgRarity * 0.05); // Higher rarity = better success
+  
+  if(Math.random() > successChance) {
+    // Fusion failed but still consume ingredients
+    state.inventory[food1]--;
+    state.inventory[food2]--;
+    if(state.inventory[food1] <= 0) delete state.inventory[food1];
+    if(state.inventory[food2] <= 0) delete state.inventory[food2];
+    
+    return { success: false, message: "💥 Fusion failed! Ingredients were consumed." };
+  }
+  
+  // Successful fusion!
+  state.inventory[food1]--;
+  state.inventory[food2]--;
+  if(state.inventory[food1] <= 0) delete state.inventory[food1];
+  if(state.inventory[food2] <= 0) delete state.inventory[food2];
+  
+  // Add fusion result
+  state.inventory[fusionName] = (state.inventory[fusionName] || 0) + 1;
+  state.foodDex.add(fusionName);
+  state.fusionUnlocks.add(fusionKey);
+  
+  // Track in history
+  state.history.unshift({
+    ts: new Date().toISOString(), 
+    name: fusionName, 
+    rarity: 'Fusion', 
+    display: `🧪 ${fusionName}`,
+    isFusion: true
+  });
+  
+  const discoveryText = alreadyKnown ? "" : " (New Discovery!)";
+  log(`🧪 FUSION SUCCESS: ${fusionName}${discoveryText}`, 'legendary');
+  createConfetti(90);
+  
+  return { 
+    success: true, 
+    result: fusionName,
+    message: `✨ Created ${fusionName}!${discoveryText}` 
+  };
+}
+
+/* ============================
+   EMERGENCY FRIDGE MODE (OFFLINE BONUS)
+   ============================ */
+function detectOfflineStatus() {
+  // Check if user is offline using multiple methods
+  const isOffline = !navigator.onLine || 
+                   (performance.now() - state.lastOnlineTime > 60000);
+  
+  if(isOffline && !state.isOfflineMode) {
+    // Just went offline - activate Emergency Fridge!
+    state.isOfflineMode = true;
+    state.offlineStartTime = Date.now();
+    
+    if(state.settings.emergencyFridgeEnabled) {
+      state.emergencyFridge = 3; // Give 3 emergency rolls
+      log('🧊 EMERGENCY FRIDGE ACTIVATED! You have 3 special offline-only rolls!', 'legendary');
+      createConfetti(100);
+    }
+    
+    renderAll();
+  } else if(!isOffline && state.isOfflineMode) {
+    // Back online
+    state.isOfflineMode = false;
+    state.lastOnlineTime = Date.now();
+    
+    // Calculate offline time bonus
+    const offlineMinutes = Math.floor((Date.now() - state.offlineStartTime) / 60000);
+    if(offlineMinutes > 5) {
+      const bonusEnergy = Math.min(50, offlineMinutes * 2);
+      state.energy = Math.min(100, state.energy + bonusEnergy);
+      log(`🔌 Back Online! +${bonusEnergy} energy for ${offlineMinutes} minutes offline`, 'legendary');
+    }
+    
+    renderAll();
+  }
+}
+
+function rollEmergencyFridge() {
+  if(state.emergencyFridge <= 0) {
+    setResultText('🧊 Emergency Fridge is empty! Go offline to refill.');
+    return;
+  }
+  
+  if(!state.isOfflineMode) {
+    setResultText('🧊 Emergency Fridge only works when offline!');
+    return;
+  }
+  
+  // Special Emergency Fridge food pool (cold/frozen themed)
+  const emergencyFoods = [
+    {name: 'Frozen Pizza Slice', emoji: '🍕', rarity: 'Uncommon'},
+    {name: 'Ice Cream Sandwich', emoji: '🍦', rarity: 'Common'},
+    {name: 'Frozen Berries', emoji: '🫐', rarity: 'Common'},
+    {name: 'Emergency Soup', emoji: '🍲', rarity: 'Uncommon'},
+    {name: 'Leftover Sushi', emoji: '🍣', rarity: 'Rare'},
+    {name: 'Mystery Frozen Meal', emoji: '📦', rarity: 'Legendary'},
+    {name: 'Survival Rations', emoji: '🥫', rarity: 'Uncommon'},
+    {name: 'Frozen Dumplings', emoji: '🥟', rarity: 'Rare'}
+  ];
+  
+  // Higher chance for better food when offline longer
+  const offlineHours = (Date.now() - state.offlineStartTime) / (1000 * 60 * 60);
+  const bonusChance = Math.min(0.3, offlineHours * 0.1); // Max 30% bonus
+  
+  let selectedFood = emergencyFoods[Math.floor(Math.random() * emergencyFoods.length)];
+  
+  // Bonus rare roll chance
+  if(Math.random() < bonusChance) {
+    const rareEmergencyFoods = emergencyFoods.filter(f => f.rarity === 'Rare' || f.rarity === 'Legendary');
+    selectedFood = rareEmergencyFoods[Math.floor(Math.random() * rareEmergencyFoods.length)] || selectedFood;
+  }
+  
+  // Consume emergency roll
+  state.emergencyFridge--;
+  state.pulls++;
+  
+  // Add to inventory and dex
+  const finalName = selectedFood.name;
+  state.inventory[finalName] = (state.inventory[finalName] || 0) + 1;
+  state.foodDex.add(finalName);
+  
+  // Track in history with special marking
+  state.history.unshift({
+    ts: new Date().toISOString(),
+    name: finalName,
+    rarity: selectedFood.rarity,
+    display: `🧊 ${selectedFood.emoji} ${finalName}`,
+    isEmergencyFridge: true
+  });
+  
+  // Result UI
+  setResultText(`🧊 Emergency Fridge: ${selectedFood.emoji} ${finalName} [${selectedFood.rarity}]`);
+  log(`🧊 Emergency Fridge gave you: ${selectedFood.emoji} ${finalName}!`, 'legendary');
+  
+  if(state.emergencyFridge <= 0) {
+    log('📦 Emergency Fridge is now empty! Go offline again to refill.', 'rare');
+  }
+  
+  // Run achievement checks and save
+  runAchievementChecks();
+  saveState();
+  renderAll();
+}
+
+function getEmergencyFridgeStatus() {
+  if(!state.settings.emergencyFridgeEnabled) return null;
+  
+  return {
+    available: state.emergencyFridge > 0,
+    count: state.emergencyFridge,
+    isOffline: state.isOfflineMode,
+    canUse: state.isOfflineMode && state.emergencyFridge > 0
+  };
+}
+
+/* ============================
+   LOCAL LEADERBOARDS SYSTEM
+   ============================ */
+function updateLocalLeaderboard() {
+  const currentScore = {
+    timestamp: Date.now(),
+    pulls: state.pulls,
+    foodsCollected: state.foodDex.size,
+    achievementsUnlocked: state.achievements.size,
+    combosCompleted: state.completedCombos.size,
+    shinyFoodsFound: state.shinyFoods.size,
+    totalScore: calculateTotalScore()
+  };
+  
+  // Add current session to leaderboard
+  state.localLeaderboard.push(currentScore);
+  
+  // Keep only top 20 scores
+  state.localLeaderboard.sort((a, b) => b.totalScore - a.totalScore);
+  if(state.localLeaderboard.length > 20) {
+    state.localLeaderboard = state.localLeaderboard.slice(0, 20);
+  }
+  
+  saveState();
+}
+
+function calculateTotalScore() {
+  // Weighted scoring system
+  const foodPoints = state.foodDex.size * 10;
+  const achievementPoints = state.achievements.size * 50;
+  const comboPoints = state.completedCombos.size * 30;
+  const shinyPoints = state.shinyFoods.size * 100;
+  const efficiencyBonus = Math.floor((state.foodDex.size / Math.max(1, state.pulls)) * 1000);
+  
+  return foodPoints + achievementPoints + comboPoints + shinyPoints + efficiencyBonus;
+}
+
+function getLocalLeaderboard() {
+  return state.localLeaderboard.map((entry, index) => ({
+    rank: index + 1,
+    score: entry.totalScore,
+    foods: entry.foodsCollected,
+    achievements: entry.achievementsUnlocked,
+    combos: entry.combosCompleted,
+    shinies: entry.shinyFoodsFound,
+    pulls: entry.pulls,
+    date: new Date(entry.timestamp).toLocaleDateString(),
+    efficiency: Math.round((entry.foodsCollected / Math.max(1, entry.pulls)) * 100)
+  }));
+}
+
+function displayLocalLeaderboard() {
+  const leaderboard = getLocalLeaderboard();
+  let html = '<h4>🏆 Your Personal Leaderboard</h4>';
+  
+  if(leaderboard.length === 0) {
+    html += '<p>Play more to build your personal leaderboard!</p>';
+  } else {
+    html += '<div style="font-size:12px; margin-bottom:10px;">Top scores from your play sessions:</div>';
+    
+    leaderboard.slice(0, 10).forEach(entry => {
+      const isCurrentBest = entry.rank === 1;
+      const bgColor = isCurrentBest ? 'rgba(255,215,0,0.1)' : 'rgba(255,255,255,0.02)';
+      const textColor = isCurrentBest ? '#FFD700' : '#ddd';
+      
+      html += `
+        <div style="background:${bgColor}; border-radius:6px; padding:8px; margin:4px 0; color:${textColor};">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div><strong>#${entry.rank} - ${entry.score.toLocaleString()} pts</strong></div>
+            <div style="font-size:11px;">${entry.date}</div>
+          </div>
+          <div style="font-size:11px; margin-top:4px;">
+            🍜${entry.foods} foods • 🏆${entry.achievements} achievements • 🧩${entry.combos} combos • ✨${entry.shinies} shinies
+            <br>🎲${entry.pulls} pulls • 📈${entry.efficiency}% efficiency
+          </div>
+        </div>
+      `;
+    });
+  }
+  
+  return html;
+}
+
+/* ============================
+   MINI-GAME FOR EXTRA ROLLS
+   ============================ */
+function showMiniGame() {
+  if(!state.settings.miniGamesEnabled) {
+    log('🎮 Mini-games are disabled in settings!', 'rare');
+    return;
+  }
+  
+  // Simple reaction time mini-game
+  const gameHtml = `
+    <div id="miniGameModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); display:flex; align-items:center; justify-content:center; z-index:10000;">
+      <div style="background:rgba(20,20,20,0.95); padding:30px; border-radius:15px; text-align:center; max-width:400px;">
+        <h3 style="color:#FFD700; margin-top:0;">🎮 Food Reaction Game</h3>
+        <div id="miniGameContent">
+          <p>Click the button when it turns GREEN!</p>
+          <button id="reactionButton" style="width:200px; height:100px; font-size:20px; background:#333; color:#fff; border:none; border-radius:10px; cursor:pointer;">
+            🍜 WAIT...
+          </button>
+          <div id="miniGameResult" style="margin-top:15px; min-height:40px;"></div>
+        </div>
+        <div style="margin-top:20px;">
+          <button id="closeMiniGame" style="background:#666; color:#fff; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">Close</button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.insertAdjacentHTML('beforeend', gameHtml);
+  
+  // Game logic
+  let gameActive = false;
+  let startTime = 0;
+  let timeout = null;
+  
+  const button = document.getElementById('reactionButton');
+  const result = document.getElementById('miniGameResult');
+  
+  // Start game after random delay
+  const startDelay = 1000 + Math.random() * 4000; // 1-5 seconds
+  
+  timeout = setTimeout(() => {
+    if(document.getElementById('reactionButton')) {
+      button.style.background = '#4CAF50';
+      button.textContent = '🍜 CLICK NOW!';
+      gameActive = true;
+      startTime = performance.now();
+    }
+  }, startDelay);
+  
+  button.addEventListener('click', () => {
+    if(!gameActive) {
+      if(timeout) clearTimeout(timeout);
+      result.innerHTML = '⏰ Too early! Wait for green...';
+      button.style.background = '#F44336';
+      button.textContent = '❌ TOO EARLY!';
+      setTimeout(() => {
+        if(document.getElementById('miniGameModal')) {
+          document.getElementById('miniGameModal').remove();
+        }
+      }, 2000);
+      return;
+    }
+    
+    const reactionTime = performance.now() - startTime;
+    gameActive = false;
+    
+    let reward = 0;
+    let message = '';
+    
+    if(reactionTime < 300) {
+      reward = 3;
+      message = '🏆 AMAZING! Lightning fast! +3 rolls';
+      createConfetti(120);
+    } else if(reactionTime < 500) {
+      reward = 2;
+      message = '⭐ Great reflexes! +2 rolls';
+      createConfetti(80);
+    } else if(reactionTime < 800) {
+      reward = 1;
+      message = '👍 Good job! +1 roll';
+      createConfetti(40);
+    } else {
+      reward = 0;
+      message = '😅 A bit slow, but nice try! +0 rolls';
+    }
+    
+    state.extraRolls += reward;
+    result.innerHTML = `⚡ ${reactionTime.toFixed(0)}ms<br>${message}`;
+    button.style.background = reward > 0 ? '#4CAF50' : '#FF9800';
+    button.textContent = reward > 0 ? '🎉 SUCCESS!' : '😊 TRY AGAIN';
+    
+    log(`🎮 Mini-game completed: ${reactionTime.toFixed(0)}ms - ${reward} bonus rolls!`, 'legendary');
+    saveState();
+    
+    setTimeout(() => {
+      if(document.getElementById('miniGameModal')) {
+        document.getElementById('miniGameModal').remove();
+      }
+      renderAll();
+    }, 3000);
+  });
+  
+  document.getElementById('closeMiniGame').addEventListener('click', () => {
+    if(timeout) clearTimeout(timeout);
+    document.getElementById('miniGameModal').remove();
+  });
+}
+
+/* ============================
+   ENERGY/STAMINA SYSTEM
+   ============================ */
+function updateEnergyFromOfflineTime() {
+  const now = Date.now();
+  const lastUpdate = state.lastEnergyUpdate || now;
+  const timeDiff = now - lastUpdate; // milliseconds
+  
+  // Regenerate 1 energy per minute (60000 ms), max 100
+  const minutesPassed = Math.floor(timeDiff / 60000);
+  const energyToAdd = minutesPassed;
+  
+  if(energyToAdd > 0) {
+    const oldEnergy = state.energy;
+    state.energy = Math.min(100, state.energy + energyToAdd);
+    state.lastEnergyUpdate = now;
+    
+    if(state.energy > oldEnergy) {
+      log(`⚡ Energy regenerated! +${state.energy - oldEnergy} energy (${minutesPassed} min offline)`);
+    }
+  }
+}
+
+function getEnergyBarHtml() {
+  const percentage = (state.energy / 100) * 100;
+  const color = percentage > 50 ? '#4CAF50' : percentage > 20 ? '#FF9800' : '#F44336';
+  return `
+    <div style="background:#333; border-radius:10px; padding:2px; margin:5px 0;">
+      <div style="background:${color}; height:20px; width:${percentage}%; border-radius:8px; transition:width 0.3s;"></div>
+    </div>
+    <div style="text-align:center; margin-top:5px;">⚡ Energy: ${state.energy}/100 ${state.energy < 10 ? '(Need 10 to roll)' : ''}</div>
+  `;
+}
+
 /* fallback weighted pick among non-mythic/non-secret using RARITY_BASE */
 function weightedFallbackPick(){
   // build pool: Common/Uncommon/Rare/Legendary
@@ -597,6 +1476,22 @@ function pickWithPity(){
    roll logic
    ============================ */
 function rollOnce(){
+  // ⚡ ENERGY SYSTEM CHECK - Each roll costs 10 energy (BYPASS IN DEV MODE)
+  updateEnergyFromOfflineTime(); // check for offline regeneration
+  if(state.energy < 10 && !state.devEnabled) {
+    setResultText("⚡ Not enough energy! Wait for energy to regenerate.");
+    log("⚡ Energy too low! Each roll costs 10 energy.", 'rare');
+    renderAll();
+    return;
+  }
+  
+  // Consume energy for this roll (unless in dev mode)
+  if(!state.devEnabled) {
+    state.energy -= 10;
+  } else {
+    log("🛠️ Dev Mode: Energy bypass enabled!", 'rare');
+  }
+  
   state.pulls++;
   // increment pity counters (until we hit)
   state.pityMythic++;
@@ -604,6 +1499,17 @@ function rollOnce(){
 
   const pickedName = pickWithPity();
   const item = findItem(pickedName) || {name:pickedName, emoji:'🧩', rarity:'Combo'}; // combo results or bakery
+  
+  // 🌟 SHINY VARIANT SYSTEM - 5% chance for any food to be shiny!
+  const isShiny = Math.random() < 0.05;
+  const finalName = isShiny ? `✨ ${pickedName}` : pickedName;
+  
+  if(isShiny) {
+    state.shinyFoods.add(pickedName); // track base food as shiny
+    log(`✨ SHINY VARIANT! You found a sparkling ${pickedName}!`, 'secret');
+    createConfetti(80); // celebration animation
+  }
+  
   // reset counters depending on rarity
   if(item.rarity === 'Secret'){
     state.pitySecret = 0;
@@ -615,18 +1521,21 @@ function rollOnce(){
     // none reset
   }
 
-  // add to inventory
-  state.inventory[item.name] = (state.inventory[item.name]||0)+1;
+  // add to inventory (use shiny name if applicable)
+  state.inventory[finalName] = (state.inventory[finalName]||0)+1;
   // record first obtain time if new
-  if(!state.firstObtainedAt[item.name]) state.firstObtainedAt[item.name] = nowISO();
-  // add to dex
-  state.foodDex.add(item.name);
+  if(!state.firstObtainedAt[finalName]) state.firstObtainedAt[finalName] = nowISO();
+  // add to dex (both base and shiny names)
+  state.foodDex.add(finalName);
+  if(isShiny) state.foodDex.add(item.name); // also add base food
   // history
-  state.history.unshift({ts: new Date().toISOString(), name:item.name, rarity:item.rarity, display:`${item.emoji} ${item.name}`});
+  const shinyEmoji = isShiny ? '✨' + item.emoji : item.emoji;
+  state.history.unshift({ts: new Date().toISOString(), name:finalName, rarity:item.rarity, display:`${shinyEmoji} ${finalName}`, isShiny: isShiny});
   if(state.history.length>2000) state.history.pop();
 
   // result UI
-  setResultText(`You Got: ${item.emoji} ${item.name} [${item.rarity}]`);
+  const rarityText = isShiny ? `${item.rarity} ✨SHINY` : item.rarity;
+  setResultText(`You Got: ${shinyEmoji} ${finalName} [${rarityText}]`);
   playRarityPop(item.rarity);
 
   // special unlocks
@@ -643,6 +1552,11 @@ function rollOnce(){
   // combos/achievements
   processCombos();
   runAchievementChecks();
+  
+  // 🏆 Update leaderboard on major milestones
+  if(state.pulls % 25 === 0 && state.pulls > 0) {
+    updateLocalLeaderboard();
+  }
 
   // extra rolls from quests
   if(state.extraRolls>0){
@@ -814,7 +1728,17 @@ function renderAchs(){
     const card = document.createElement('div'); card.className='ach-card' + (unlocked? ' unlocked' : '');
     const ico = document.createElement('div'); ico.style.fontSize='20px'; ico.innerText = unlocked? '🏆':'🔒';
     const t = document.createElement('div'); t.className='ach-title'; t.innerText = a;
-    const sub = document.createElement('div'); sub.className='small-muted'; sub.innerText = unlocked? 'Unlocked' : (ACHIEVEMENTS.find(x=>x.title===a)?.desc || 'Locked');
+    const sub = document.createElement('div'); sub.className='small-muted'; 
+    if(unlocked) {
+      sub.innerText = 'Unlocked';
+    } else {
+      const achData = ACHIEVEMENTS.find(x=>x.title===a);
+      if(achData && achData.tip) {
+        sub.innerText = `💡 ${achData.tip}`;
+      } else {
+        sub.innerText = achData?.desc || 'Locked';
+      }
+    }
     card.appendChild(ico); card.appendChild(t); card.appendChild(sub);
     grid.appendChild(card);
   });
@@ -851,7 +1775,52 @@ function renderCombos(){
 
 /* render dev/stats */
 function renderQuick(){
+  // ⚡ Update energy from offline time before rendering
+  updateEnergyFromOfflineTime();
+  
+  // 🎁 Check for daily reward automatically 
+  const rewardStatus = getDailyRewardStatus();
+  if(rewardStatus.canClaim) {
+    // Auto-claim daily rewards when opening stats
+    checkDailyReward();
+    saveState();
+  }
+  
   document.getElementById('stats').innerText = `Pulls: ${state.pulls} · Pity(M): ${state.pityMythic} · Pity(S): ${state.pitySecret} · Extra Rolls: ${state.extraRolls}`;
+  
+  // ⚡ ENERGY BAR DISPLAY - Add energy bar to the stats area
+  const energyDiv = document.getElementById('energyBar');
+  if(energyDiv) {
+    energyDiv.innerHTML = getEnergyBarHtml();
+  }
+  
+  // 🎁 DAILY REWARD STATUS
+  const dailyDiv = document.getElementById('dailyReward');
+  if(dailyDiv) {
+    const status = getDailyRewardStatus();
+    dailyDiv.innerHTML = status.claimed 
+      ? `🎁 Daily Reward: Claimed! Next in ${status.hoursUntilReset}h`
+      : `🎁 Daily Reward: Ready to claim!`;
+  }
+  
+  // 🧊 EMERGENCY FRIDGE STATUS & BUTTON VISIBILITY
+  const fridgeBtn = document.getElementById('rollEmergencyFridge');
+  if(fridgeBtn) {
+    const fridgeStatus = getEmergencyFridgeStatus();
+    if(fridgeStatus && fridgeStatus.canUse) {
+      fridgeBtn.style.display = 'inline-block';
+      fridgeBtn.textContent = `🧊 Emergency Fridge (${fridgeStatus.count})`;
+    } else {
+      fridgeBtn.style.display = 'none';
+    }
+  }
+  
+  // 🏆 LOCAL LEADERBOARD DISPLAY
+  const leaderboardDiv = document.getElementById('localLeaderboard');
+  if(leaderboardDiv) {
+    leaderboardDiv.innerHTML = displayLocalLeaderboard();
+  }
+  
   const inv = Object.entries(state.inventory).sort((a,b)=>b[1]-a[1]).slice(0,12);
   document.getElementById('quickInv').innerHTML = inv.length? inv.map(x=>`${x[1]}× ${x[0]}`).join('<br>') : '(empty)';
   document.getElementById('mythicPityLabel').innerText = `pity ${state.pityMythic}/${PITY.mythic}`;
@@ -1161,7 +2130,6 @@ function toggleDevUI(on){
   state.devEnabled = !!on;
   document.getElementById('devEnableCheckbox').checked = state.devEnabled;
   document.getElementById('devControls').style.display = state.devEnabled ? 'block':'none';
-  document.getElementById('devGear').style.display = state.devEnabled ? 'flex' : 'none';
   saveState();
   if(state.devEnabled) populateDevSelects();
 }
@@ -1174,20 +2142,6 @@ function populateDevSelects(){
   comboSelect.innerHTML = COMBOS.map(c=>`<option value="${c.result}">🧩 ${c.result}</option>`).join('');
 }
 
-document.getElementById('devGear').addEventListener('click', ()=> {
-  const el = document.getElementById('devDrawer');
-  if(el && el.classList.contains('open')) { el.classList.remove('open'); el.style.display='none'; }
-  else { 
-    // create dev drawer if missing
-    let drawer = document.getElementById('devDrawer');
-    if(!drawer){
-      drawer = document.createElement('div'); drawer.id='devDrawer'; drawer.style.cssText='position:fixed;right:14px;bottom:154px;width:360px;background:var(--card-bg);border-radius:12px;padding:12px;border:2px solid var(--accent);z-index:10001;display:block;';
-      drawer.innerHTML = '<strong>Dev Tools</strong><div id="devInner"></div>';
-      document.body.appendChild(drawer);
-    }
-    drawer.classList.add('open'); drawer.style.display='block'; populateDevSelects();
-  }
-});
 
 /* dev actions */
 document.getElementById('giveFoodBtn').addEventListener('click', ()=>{
@@ -1471,7 +2425,320 @@ window._forceAdd = (n)=>{ state.inventory[n]=(state.inventory[n]||0)+1; state.fo
         }, 3000); // Check every 3 seconds
 
         // Quick access button to manually trigger thunder reward
-        document.getElementById('thunderRewardBtn').addEventListener('click', triggerThunderReward);
+        document.getElementById('thunderRewardBtn') && document.getElementById('thunderRewardBtn').addEventListener('click', triggerThunderReward);
+
+        // ⚙️ ULTIMATE SETTINGS SYSTEM JAVASCRIPT
+        function initializeSettingsUI() {
+          // Load current settings into UI controls
+          const settings = state.settings;
+          
+          // 1. General Settings
+          document.getElementById('soundEnabled').checked = settings.soundEnabled;
+          document.getElementById('musicEnabled').checked = settings.musicEnabled;
+          document.getElementById('animationsEnabled').checked = settings.animationsEnabled;
+          document.getElementById('soundVolume').value = settings.soundVolume;
+          document.getElementById('musicVolume').value = settings.musicVolume;
+          document.getElementById('uiScale').value = settings.uiScale;
+          document.getElementById('uiScaleValue').textContent = settings.uiScale + '%';
+          
+          // 2. Mobile Mode
+          document.getElementById('mobileMode').checked = settings.mobileMode;
+          document.getElementById('oneHandMode').value = settings.oneHandMode;
+          document.getElementById('swipeNavigation').checked = settings.swipeNavigation;
+          document.getElementById('compactDexMode').checked = settings.compactDexMode;
+          document.getElementById('offlineCaching').checked = settings.offlineCaching;
+          
+          // 3. Offline Mode
+          document.getElementById('offlineRolls').checked = settings.offlineRolls;
+          document.getElementById('offlineAchievements').checked = settings.offlineAchievements;
+          document.getElementById('offlineDexAccess').checked = settings.offlineDexAccess;
+          document.getElementById('emergencyFridgeEnabled').checked = settings.emergencyFridgeEnabled;
+          document.getElementById('autoSync').checked = settings.autoSync;
+          
+          // 4. Customization
+          document.getElementById('backgroundTheme').value = settings.backgroundTheme;
+          document.getElementById('themeMode').value = settings.themeMode;
+          document.getElementById('floatingEmojis').checked = settings.floatingEmojis;
+          document.getElementById('dexLayout').value = settings.dexLayout;
+          document.getElementById('foodVariants').checked = settings.foodVariants;
+          
+          // 5. Performance
+          document.getElementById('lowPowerMode').checked = settings.lowPowerMode;
+          document.getElementById('dataSaver').checked = settings.dataSaver;
+          document.getElementById('fpsLimit').value = settings.fpsLimit;
+          document.getElementById('autoSaveInterval').value = settings.autoSaveInterval;
+          document.getElementById('autoSaveValue').textContent = settings.autoSaveInterval + 's';
+          
+          // 6. Extra Fun
+          document.getElementById('dailyLoginRewards').checked = settings.dailyLoginRewards;
+          document.getElementById('miniGamesEnabled').checked = settings.miniGamesEnabled;
+          document.getElementById('experimentalFeatures').checked = settings.experimentalFeatures;
+          document.getElementById('mysteryBackgroundMode').checked = settings.mysteryBackgroundMode;
+          document.getElementById('hiddenCodesEnabled').checked = settings.hiddenCodesEnabled;
+          
+          // Add event listeners for live updates
+          addSettingsEventListeners();
+          
+          // Apply current settings
+          applyAllSettings();
+        }
+
+        function addSettingsEventListeners() {
+          // UI Scale slider with live preview
+          document.getElementById('uiScale').addEventListener('input', (e) => {
+            const value = e.target.value;
+            document.getElementById('uiScaleValue').textContent = value + '%';
+            state.settings.uiScale = parseInt(value);
+            applyUIScale();
+            saveState();
+          });
+          
+          // Auto Save slider with live preview
+          document.getElementById('autoSaveInterval').addEventListener('input', (e) => {
+            const value = e.target.value;
+            document.getElementById('autoSaveValue').textContent = value + 's';
+            state.settings.autoSaveInterval = parseInt(value);
+            saveState();
+          });
+          
+          // All checkboxes and selects
+          const settingsElements = [
+            'soundEnabled', 'musicEnabled', 'animationsEnabled', 'soundVolume', 'musicVolume',
+            'mobileMode', 'oneHandMode', 'swipeNavigation', 'compactDexMode', 'offlineCaching',
+            'offlineRolls', 'offlineAchievements', 'offlineDexAccess', 'emergencyFridgeEnabled', 'autoSync',
+            'backgroundTheme', 'themeMode', 'floatingEmojis', 'dexLayout', 'foodVariants',
+            'lowPowerMode', 'dataSaver', 'fpsLimit', 
+            'dailyLoginRewards', 'miniGamesEnabled', 'experimentalFeatures', 'mysteryBackgroundMode', 'hiddenCodesEnabled'
+          ];
+          
+          settingsElements.forEach(id => {
+            const element = document.getElementById(id);
+            if(!element) return;
+            
+            element.addEventListener('change', () => {
+              const settingKey = id;
+              if(element.type === 'checkbox') {
+                state.settings[settingKey] = element.checked;
+              } else if(element.type === 'range' || element.tagName === 'SELECT') {
+                const value = element.type === 'range' ? parseInt(element.value) : element.value;
+                state.settings[settingKey] = value;
+              }
+              
+              // Apply specific settings immediately
+              applySettingChange(settingKey);
+              saveState();
+              log(`⚙️ ${settingKey} updated!`, 'rare');
+            });
+          });
+          
+          // Save/Reset buttons
+          document.getElementById('saveSettings').addEventListener('click', () => {
+            saveState();
+            log('💾 Settings saved successfully!', 'legendary');
+            createConfetti(40);
+          });
+          
+          document.getElementById('resetSettings').addEventListener('click', () => {
+            if(confirm('Reset all settings to defaults? This cannot be undone!')) {
+              resetSettingsToDefaults();
+              initializeSettingsUI();
+              saveState();
+              log('🔄 Settings reset to defaults!', 'legendary');
+            }
+          });
+        }
+
+        function applyAllSettings() {
+          const settings = state.settings;
+          
+          // Apply UI Scale
+          applyUIScale();
+          
+          // Apply Theme
+          applyThemeMode();
+          
+          // Apply Mobile Mode
+          if(settings.mobileMode) {
+            document.body.classList.add('mobile-mode');
+            applyOneHandMode();
+          } else {
+            document.body.classList.remove('mobile-mode');
+          }
+          
+          // Apply Low Power Mode
+          if(settings.lowPowerMode) {
+            document.body.classList.add('low-power-mode');
+          } else {
+            document.body.classList.remove('low-power-mode');
+          }
+          
+          // Apply Background Theme
+          applyBackgroundTheme();
+        }
+
+        function applyUIScale() {
+          const scale = state.settings.uiScale / 100;
+          document.documentElement.style.fontSize = (16 * scale) + 'px';
+        }
+
+        function applyThemeMode() {
+          const theme = state.settings.themeMode;
+          document.body.classList.remove('light-theme', 'dark-theme');
+          
+          if(theme === 'light') {
+            document.body.classList.add('light-theme');
+          } else if(theme === 'dark') {
+            document.body.classList.add('dark-theme');
+          }
+          // 'auto' uses browser/system preference
+        }
+
+        function applyOneHandMode() {
+          const mode = state.settings.oneHandMode;
+          document.body.classList.remove('one-hand-left', 'one-hand-right', 'one-hand-center');
+          document.body.classList.add('one-hand-' + mode);
+        }
+
+        function applyBackgroundTheme() {
+          const theme = state.settings.backgroundTheme;
+          const themes = ['default', 'golden', 'thunder', 'aurora', 'bubbles', 'starfield', 'particles'];
+          
+          // Remove all theme classes and glitter elements
+          themes.forEach(t => document.body.classList.remove('bg-' + t));
+          document.querySelectorAll('.gold-glitter, .bubble-layer').forEach(el => el.remove());
+          
+          // Mystery background mode takes priority
+          if(state.settings.mysteryBackgroundMode) {
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+            if(randomTheme !== 'default') {
+              document.body.classList.add('bg-' + randomTheme);
+              addThemeElements(randomTheme);
+            }
+            log('🎲 Mystery background: ' + randomTheme, 'rare');
+          } else if(theme !== 'default') {
+            // Add selected theme
+            document.body.classList.add('bg-' + theme);
+            addThemeElements(theme);
+          }
+        }
+
+        function addThemeElements(theme) {
+          if(theme === 'golden') {
+            // Add golden glitter effect
+            const glitter = document.createElement('div');
+            glitter.className = 'gold-glitter';
+            document.body.appendChild(glitter);
+          } else if(theme === 'bubbles') {
+            // Add bubble layer for animated bubbles
+            const bubbleLayer = document.createElement('div');
+            bubbleLayer.className = 'bubble-layer';
+            document.body.appendChild(bubbleLayer);
+            
+            // Spawn animated bubbles
+            setInterval(() => {
+              if(document.querySelector('.bg-bubbles')) {
+                createBubble(bubbleLayer);
+              }
+            }, 800);
+          }
+        }
+
+        function createBubble(container) {
+          const bubble = document.createElement('div');
+          const size = 10 + Math.random() * 40;
+          bubble.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), rgba(135,206,250,0.05));
+            bottom: -50px;
+            left: ${Math.random() * 100}vw;
+            animation: bubbleFloat ${8 + Math.random() * 10}s linear forwards;
+          `;
+          
+          const style = document.createElement('style');
+          style.textContent = `
+            @keyframes bubbleFloat {
+              to { transform: translateY(-${window.innerHeight + 100}px); opacity: 0; }
+            }
+          `;
+          document.head.appendChild(style);
+          
+          container.appendChild(bubble);
+          setTimeout(() => bubble.remove(), 20000);
+        }
+
+        function applySettingChange(settingKey) {
+          // Apply specific setting changes immediately
+          switch(settingKey) {
+            case 'uiScale':
+              applyUIScale();
+              break;
+            case 'themeMode':
+              applyThemeMode();
+              break;
+            case 'mobileMode':
+              location.reload(); // Full refresh for mobile mode
+              break;
+            case 'oneHandMode':
+              applyOneHandMode();
+              break;
+            case 'backgroundTheme':
+            case 'mysteryBackgroundMode':
+              applyBackgroundTheme();
+              break;
+            case 'lowPowerMode':
+              if(state.settings.lowPowerMode) {
+                document.body.classList.add('low-power-mode');
+              } else {
+                document.body.classList.remove('low-power-mode');
+              }
+              break;
+          }
+        }
+
+        function resetSettingsToDefaults() {
+          state.settings = {
+            soundEnabled: true, musicEnabled: true, animationsEnabled: true,
+            soundVolume: 70, musicVolume: 50, uiScale: 100,
+            mobileMode: false, oneHandMode: 'center', swipeNavigation: false,
+            compactDexMode: false, offlineCaching: true,
+            offlineRolls: true, offlineAchievements: true, offlineDexAccess: true,
+            emergencyFridgeEnabled: true, autoSync: true,
+            backgroundTheme: 'default', themeMode: 'auto', floatingEmojis: true,
+            dexLayout: 'grid', foodVariants: true,
+            lowPowerMode: false, dataSaver: false, fpsLimit: 60, autoSaveInterval: 30,
+            dailyLoginRewards: true, miniGamesEnabled: true, experimentalFeatures: false,
+            mysteryBackgroundMode: false, hiddenCodesEnabled: true
+          };
+        }
+
+        // Initialize settings when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+          setTimeout(initializeSettingsUI, 100);
+          
+          // 🧊 Emergency Fridge button event listener
+          document.getElementById('rollEmergencyFridge').addEventListener('click', rollEmergencyFridge);
+          
+          // 🎮 Mini-game button event listener
+          document.getElementById('playMiniGame').addEventListener('click', showMiniGame);
+          
+          // 🌐 Offline status detection
+          setInterval(detectOfflineStatus, 5000); // Check every 5 seconds
+          window.addEventListener('online', detectOfflineStatus);
+          window.addEventListener('offline', detectOfflineStatus);
+          
+          // 🏆 Update leaderboard on significant achievements
+          setInterval(() => {
+            if(state.pulls > 0 && state.pulls % 50 === 0) {
+              updateLocalLeaderboard();
+            }
+          }, 30000); // Check every 30 seconds
+          
+          // Initialize offline detection
+          setTimeout(detectOfflineStatus, 1000);
+        });
     </script>
 </body>
 </html>
