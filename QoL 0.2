@@ -23,7 +23,7 @@ html,body{height:100%}
 body{
   margin:0;font-family:Inter,Arial,Helvetica,sans-serif;
   background:var(--bg);color:var(--fg);
-  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px;overflow-x:hidden;position:relative;transform:scale(var(--ui-scale));
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px;overflow-x:hidden;position:relative;
 }
 /* overlay for adjustable transparency */
 #bgOverlay{position:fixed;inset:0;pointer-events:none;background:rgba(0,0,0,var(--bg-overlay));z-index:0;transition:background .25s ease}
@@ -126,111 +126,387 @@ h1{margin:10px 0 14px;text-align:center;font-size:20px}
 .settings-category label { display:block; margin:8px 0; color:#ddd; cursor:pointer; }
 .settings-category input, .settings-category select { margin-left:8px; }
 
-/* 🎨 ORIGINAL BEAUTIFUL BACKGROUND THEMES */
-/* Golden Theme with Glitter */
-body.bg-golden {
-  background: linear-gradient(180deg, #2b1f00, #4b3000);
+/* 🎨 ENHANCED BACKGROUND THEMES */
+/* Street Food Festival */
+body.bg-street-food {
+  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1a2a"/><circle cx="20" cy="20" r="8" fill="%23ff6b6b"/><circle cx="60" cy="30" r="6" fill="%234ecdc4"/><circle cx="80" cy="60" r="7" fill="%23ffe66d"/></svg>');
+  background-size: cover;
 }
-body.bg-golden .gold-glitter {
+
+.neon-sign {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff6b6b;
+  text-shadow: 0 0 10px #ff6b6b, 0 0 20px #ff6b6b, 0 0 30px #ff6b6b;
+  animation: neonFlicker 2s infinite alternate;
+}
+
+@keyframes neonFlicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 10px #ff6b6b, 0 0 20px #ff6b6b, 0 0 30px #ff6b6b;
+  }
+  20%, 24%, 55% {
+    opacity: 0.8;
+    text-shadow: 0 0 5px #ff6b6b, 0 0 10px #ff6b6b;
+  }
+}
+
+/* Cozy Ramen Shop */
+body.bg-ramen-shop {
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.3), transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(210, 180, 140, 0.2), transparent 50%),
+    linear-gradient(135deg, #8B4513 0%, #D2B48C 100%);
+}
+
+.steam {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  filter: blur(8px);
+  animation: steamRise 8s infinite;
+}
+
+@keyframes steamRise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  50% { opacity: 0.6; }
+  100% { transform: translateY(-100px) scale(2); opacity: 0; }
+}
+
+/* Dessert Café */
+body.bg-dessert-cafe {
+  background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+}
+
+.floating-pastry {
+  position: absolute;
+  font-size: 24px;
+  animation: floatDown 15s linear infinite;
+}
+
+@keyframes floatDown {
+  0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+/* Luxury Buffet Hall */
+body.bg-buffet-hall {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.1), transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.1), transparent 40%),
+    linear-gradient(135deg, #2c1a0a 0%, #5a3921 100%);
+}
+
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: gold;
+  border-radius: 50%;
+  animation: sparkleTwinkle 3s infinite;
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* Farmer's Market */
+body.bg-farmers-market {
+  background: 
+    linear-gradient(to bottom, #87CEEB 0%, #87CEEB 70%, #8B4513 70%, #8B4513 100%);
+}
+
+.sunflower {
+  position: absolute;
+  bottom: 30%;
+  font-size: 24px;
+  animation: sunflowerSway 8s ease-in-out infinite;
+}
+
+@keyframes sunflowerSway {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+/* Seaside Boardwalk */
+body.bg-seaside {
+  background: linear-gradient(to bottom, #1e90ff 0%, #87ceeb 50%, #ffa500 100%);
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background: 
+    radial-gradient(ellipse at center, rgba(30, 144, 255, 0.6) 0%, transparent 70%),
+    radial-gradient(ellipse at center, rgba(135, 206, 235, 0.4) 0%, transparent 70%);
+  animation: waveMove 4s ease-in-out infinite;
+}
+
+@keyframes waveMove {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+}
+
+/* Tokyo Street */
+body.bg-tokyo {
+  background: linear-gradient(135deg, #1a1a2a 0%, #2a1a4a 100%);
+}
+
+.neon-glow {
+  text-shadow: 
+    0 0 5px #ff00ff,
+    0 0 10px #ff00ff,
+    0 0 15px #ff00ff,
+    0 0 20px #ff00ff,
+    0 0 35px #ff00ff,
+    0 0 40px #ff00ff;
+  animation: neonPulse 2s infinite alternate;
+}
+
+@keyframes neonPulse {
+  from { opacity: 0.8; }
+  to { opacity: 1; }
+}
+
+/* Fantasy Castle Banquet */
+body.bg-fantasy-castle {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(75, 0, 130, 0.3), transparent 50%),
+    linear-gradient(135deg, #4B0082 0%, #2c003e 100%);
+}
+
+.floating-candle {
+  position: absolute;
+  width: 6px;
+  height: 20px;
+  background: linear-gradient(to bottom, #8B4513, #D2691E);
+  border-radius: 3px;
+  animation: candleFloat 10s ease-in-out infinite;
+}
+
+.floating-candle::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #ffa500, #ff4500, transparent 70%);
+  border-radius: 50%;
+  animation: candleFlicker 1.5s infinite alternate;
+}
+
+@keyframes candleFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes candleFlicker {
+  0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+
+/* Food Laboratory */
+body.bg-food-lab {
+  background: 
+    radial-gradient(circle at 30% 70%, rgba(128, 128, 128, 0.2), transparent 50%),
+    linear-gradient(135deg, #2f2f2f 0%, #4a4a4a 100%);
+}
+
+.bubbling-tube {
+  position: absolute;
+  width: 40px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent 10%, rgba(0, 255, 255, 0.3) 30%, rgba(0, 255, 255, 0.6) 50%, rgba(0, 255, 255, 0.3) 70%, transparent 90%);
+  border-radius: 20px;
+  animation: tubeBubble 4s infinite;
+}
+
+@keyframes tubeBubble {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 -100px; }
+}
+
+/* Hidden Garden Picnic */
+body.bg-hidden-garden {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(255, 182, 193, 0.3), transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(173, 216, 230, 0.3), transparent 40%),
+    linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+}
+
+.falling-petal {
+  position: absolute;
+  font-size: 16px;
+  color: #ffb6c1;
+  animation: petalFall 12s linear infinite;
+}
+
+@keyframes petalFall {
+  0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+/* Thunder Reward Styles */
+body.thunder-bg {
+  background: linear-gradient(180deg, #1a1a21 0%, #f7e640 100%);
+  overflow: hidden;
+}
+
+.thunder-aura {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1;
+  background: radial-gradient(circle at 50% 60%, rgba(255, 255, 80, 0.14), transparent 100%);
   mix-blend-mode: screen;
-  background: 
-    radial-gradient(2px 2px at 20% 30%, rgba(255,215,0,0.8), transparent),
-    radial-gradient(3px 3px at 60% 70%, rgba(255,223,0,0.6), transparent),
-    radial-gradient(1px 1px at 80% 20%, rgba(255,215,0,0.9), transparent);
-  background-size: 200px 200px, 300px 300px, 150px 150px;
-  animation: goldGlitter 8s ease infinite;
-}
-@keyframes goldGlitter {
-  0%, 100% { opacity: 0.7; transform: translateY(0px); }
-  50% { opacity: 1; transform: translateY(-5px); }
 }
 
-/* Thunder/Lightning Theme */
-body.bg-thunder {
-  background: linear-gradient(180deg, #1a1a21 0%, #2a2a35 100%);
-  position: relative;
-}
-body.bg-thunder::before {
-  content: '';
+.thunder-flash {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
-  background: radial-gradient(circle at 50% 60%, rgba(135, 206, 250, 0.08), transparent 100%);
-  animation: thunderPulse 3s ease-in-out infinite;
-}
-@keyframes thunderPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.8; }
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(255, 255, 80, 0.33) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.18s;
 }
 
-/* Aurora/Secret Theme */
-body.bg-aurora {
-  background: linear-gradient(180deg, #0b0010, #140018);
-  position: relative;
-}
-body.bg-aurora::before {
-  content: '';
+.thunder-cloud-emoji {
   position: fixed;
-  inset: 0;
+  z-index: 3;
+  font-size: 64px;
+  opacity: 0.85;
   pointer-events: none;
-  z-index: 1;
-  background: 
-    radial-gradient(ellipse at 30% 20%, rgba(147, 0, 211, 0.15), transparent 50%),
-    radial-gradient(ellipse at 70% 80%, rgba(255, 20, 147, 0.12), transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(0, 191, 255, 0.08), transparent 60%);
-  animation: auroraShift 12s ease-in-out infinite;
-}
-@keyframes auroraShift {
-  0% { transform: translateX(-10%) rotate(-2deg); }
-  33% { transform: translateX(10%) rotate(1deg); }
-  66% { transform: translateX(-5%) rotate(-1deg); }
-  100% { transform: translateX(-10%) rotate(-2deg); }
+  filter: blur(0.5px) drop-shadow(0 6px 32px #000a);
+  animation: cloud-move 14s linear forwards;
 }
 
-/* Bubble Ocean Theme */
-body.bg-bubbles {
-  background: linear-gradient(180deg, #001122, #003366);
-}
-body.bg-bubbles .bubble-layer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Starfield Theme */
-body.bg-starfield {
-  background: linear-gradient(180deg, #0a0a1a, #1a1a2a);
-  position: relative;
-}
-body.bg-starfield::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: 
-    radial-gradient(1px 1px at 15% 25%, #fff, transparent),
-    radial-gradient(1px 1px at 85% 15%, #fff, transparent),
-    radial-gradient(2px 2px at 45% 75%, rgba(255,255,255,0.8), transparent),
-    radial-gradient(1px 1px at 75% 45%, #fff, transparent),
-    radial-gradient(1px 1px at 25% 85%, #fff, transparent);
-  background-size: 400px 400px, 300px 300px, 500px 500px, 200px 200px, 350px 350px;
-  animation: starTwinkle 15s linear infinite;
-}
-@keyframes starTwinkle {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 1; }
+@keyframes cloud-move {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.82);
+  }
+  6% {
+    opacity: 0.85;
+  }
+  80% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(16vh) scale(1.02);
+  }
 }
 
-/* Floating Particles Theme */
-body.bg-particles {
-  background: linear-gradient(180deg, #1a0030, #2a0050);
+.thunder-flash.active {
+  opacity: 1;
+}
+
+.thunder-clouds {
+  animation: rise 15s linear infinite;
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(80vh) scale(0.6);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-40vh) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Theme modes */
+body.light-theme {
+  --bg: #f0f0f0;
+  --fg: #333;
+  --card-bg: rgba(255,255,255,0.8);
+  --accent: #666;
+  --muted: rgba(0,0,0,0.06);
+}
+
+body.dark-theme {
+  --bg: #000;
+  --fg: #fff;
+  --card-bg: rgba(0,0,0,0.75);
+  --accent: #fff;
+  --muted: rgba(255,255,255,0.06);
+}
+
+/* Mobile mode */
+body.mobile-mode {
+  --panel-w: 100%;
+}
+
+body.mobile-mode .container {
+  grid-template-columns: 1fr;
+}
+
+/* Low power mode */
+body.low-power-mode * {
+  animation-duration: 0.001s !important;
+  transition-duration: 0.001s !important;
+}
+
+/* Leaderboard styles */
+.leaderboard-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin: 4px 0;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  transition: transform 0.2s;
+}
+
+.leaderboard-entry:hover {
+  transform: translateX(4px);
+  background: rgba(255,255,255,0.08);
+}
+
+.leaderboard-rank {
+  font-weight: bold;
+  color: gold;
+  min-width: 30px;
+}
+
+.leaderboard-name {
+  flex: 1;
+  margin: 0 12px;
+}
+
+.leaderboard-score {
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-weight: bold;
 }
 </style>
 </head>
@@ -282,7 +558,12 @@ body.bg-particles {
         <div id="foodsTab" class="tab-pane">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
             <div><strong>Food Dex</strong> <span id="dexProgress" class="small-muted"></span></div>
-            <div class="small-muted">Sort: <select id="dexSort"><option value="alpha">A→Z</option><option value="rarity">Rarity</option></select></div>
+            <div class="small-muted">Sort: 
+              <select id="dexSort">
+                <option value="alpha">A→Z</option>
+                <option value="rarity">Rarity (Best→Common)</option>
+              </select>
+            </div>
           </div>
           <div id="foodsGrid" class="dex-grid"></div>
         </div>
@@ -353,12 +634,16 @@ body.bg-particles {
               <label>🌄 Background: 
                 <select id="backgroundTheme">
                   <option value="default">🎯 Default Dark</option>
-                  <option value="golden">✨ Golden Glitter</option>
-                  <option value="thunder">⚡ Thunder Storm</option>
-                  <option value="aurora">🌌 Purple Aurora</option>
-                  <option value="bubbles">🫧 Ocean Bubbles</option>
-                  <option value="starfield">⭐ Starfield</option>
-                  <option value="particles">🔮 Floating Particles</option>
+                  <option value="street-food">🎪 Street Food Festival</option>
+                  <option value="ramen-shop">🍜 Cozy Ramen Shop</option>
+                  <option value="dessert-cafe">🍰 Dessert Café</option>
+                  <option value="buffet-hall">🏛️ Luxury Buffet Hall</option>
+                  <option value="farmers-market">🌽 Farmer's Market</option>
+                  <option value="seaside">🌊 Seaside Boardwalk</option>
+                  <option value="tokyo">🏙️ Tokyo Street</option>
+                  <option value="fantasy-castle">🏰 Fantasy Castle Banquet</option>
+                  <option value="food-lab">🔬 Food Laboratory</option>
+                  <option value="hidden-garden">🌸 Hidden Garden Picnic</option>
                 </select>
               </label><br>
               <label>🎨 Theme: 
@@ -449,6 +734,16 @@ body.bg-particles {
             Loading your best scores...
           </div>
           <hr style="border-color:rgba(255,255,255,0.06)">
+          <h4>Reaction Time Leaderboard</h4>
+          <div id="reactionLeaderboard" style="max-height:200px; overflow-y:auto; font-size:12px;">
+            <div class="leaderboard-header">
+              <span>Rank</span>
+              <span>Time</span>
+              <span>Reward</span>
+            </div>
+            <!-- Leaderboard entries will be populated here -->
+          </div>
+          <hr style="border-color:rgba(255,255,255,0.06)">
           <h4>Top Inventory</h4>
           <div id="quickInv">(empty)</div>
           <hr style="border-color:rgba(255,255,255,0.06)">
@@ -529,8 +824,6 @@ body.bg-particles {
     <div class="small-muted" style="color:#fff">Use if you want a completely fresh start.</div>
   </div>
 </div>
-
-
 
 <script>
 /* ============================
@@ -779,6 +1072,8 @@ let state = {
   isOfflineMode: false,
   lastOnlineTime: Date.now(),
   offlineStartTime: null,
+  // Reaction Time Leaderboard
+  reactionLeaderboard: [],
   
   // ⚙️ ULTIMATE SETTINGS SYSTEM
   settings: {
@@ -852,6 +1147,7 @@ function saveState(){
     fusionUnlocks: [...state.fusionUnlocks],
     localLeaderboard: state.localLeaderboard,
     offlineTime: state.offlineTime,
+    reactionLeaderboard: state.reactionLeaderboard,
     // Ultimate Settings
     settings: state.settings
   };
@@ -886,6 +1182,7 @@ function loadState(){
       state.fusionUnlocks = new Set(p.fusionUnlocks || []);
       state.localLeaderboard = p.localLeaderboard || [];
       state.offlineTime = p.offlineTime || 0;
+      state.reactionLeaderboard = p.reactionLeaderboard || [];
       // Ultimate Settings (with defaults)
       state.settings = Object.assign({
         soundEnabled: true, musicEnabled: true, animationsEnabled: true,
@@ -1271,6 +1568,64 @@ function displayLocalLeaderboard() {
 }
 
 /* ============================
+   REACTION TIME LEADERBOARD
+   ============================ */
+function updateReactionLeaderboard(reactionTime, reward) {
+  const entry = {
+    timestamp: Date.now(),
+    reactionTime: reactionTime,
+    reward: reward
+  };
+  
+  // Add to leaderboard
+  state.reactionLeaderboard.push(entry);
+  
+  // Keep only top 10 scores (fastest times)
+  state.reactionLeaderboard.sort((a, b) => a.reactionTime - b.reactionTime);
+  if(state.reactionLeaderboard.length > 10) {
+    state.reactionLeaderboard = state.reactionLeaderboard.slice(0, 10);
+  }
+  
+  saveState();
+  renderReactionLeaderboard();
+}
+
+function renderReactionLeaderboard() {
+  const leaderboard = state.reactionLeaderboard;
+  const container = document.getElementById('reactionLeaderboard');
+  
+  if(!container) return;
+  
+  let html = `
+    <div class="leaderboard-header">
+      <span>Rank</span>
+      <span>Time</span>
+      <span>Reward</span>
+    </div>
+  `;
+  
+  if(leaderboard.length === 0) {
+    html += '<div style="text-align:center; padding:20px; color:#888;">No reaction times recorded yet!</div>';
+  } else {
+    leaderboard.forEach((entry, index) => {
+      const rank = index + 1;
+      const time = entry.reactionTime.toFixed(0);
+      const reward = entry.reward;
+      
+      html += `
+        <div class="leaderboard-entry">
+          <div class="leaderboard-rank">#${rank}</div>
+          <div class="leaderboard-name">${time}ms</div>
+          <div class="leaderboard-score">+${reward} rolls</div>
+        </div>
+      `;
+    });
+  }
+  
+  container.innerHTML = html;
+}
+
+/* ============================
    MINI-GAME FOR EXTRA ROLLS
    ============================ */
 function showMiniGame() {
@@ -1361,6 +1716,9 @@ function showMiniGame() {
     result.innerHTML = `⚡ ${reactionTime.toFixed(0)}ms<br>${message}`;
     button.style.background = reward > 0 ? '#4CAF50' : '#FF9800';
     button.textContent = reward > 0 ? '🎉 SUCCESS!' : '😊 TRY AGAIN';
+    
+    // Update reaction leaderboard
+    updateReactionLeaderboard(reactionTime, reward);
     
     log(`🎮 Mini-game completed: ${reactionTime.toFixed(0)}ms - ${reward} bonus rolls!`, 'legendary');
     saveState();
@@ -1664,24 +2022,39 @@ function setResultText(t){
   el.classList.add('pop');
 }
 
-/* render foods grid */
+/* render foods grid - FIXED SORTING */
 function renderFoods(){
   const grid = document.getElementById('foodsGrid');
   grid.innerHTML = '';
   const comboResults = COMBOS.map(c=>c.result);
   const allNames = [...new Set([...ITEM_NAMES, ...comboResults])];
   const sort = document.getElementById('dexSort').value;
-  if(sort==='alpha') allNames.sort((a,b)=>a.localeCompare(b));
-  else {
-    const order = {Common:0,Uncommon:1,Rare:2,Legendary:3,Mythic:4,Secret:5,Combo:6,undefined:7};
+  
+  if(sort==='alpha') {
+    allNames.sort((a,b)=>a.localeCompare(b));
+  } else {
+    // Rarity sorting - rarest to most common
+    const rarityOrder = { 
+      'Mythic': 0, 'Secret': 1, 'Legendary': 2, 'Rare': 3, 'Uncommon': 4, 'Common': 5, 'Combo': 6, 'undefined': 7 
+    };
+    
     allNames.sort((a,b)=>{
-      const ai = findItem(a); const bi = findItem(b);
+      const ai = findItem(a); 
+      const bi = findItem(b);
       const ar = ai? ai.rarity : (comboResults.includes(a)? 'Combo' : '');
       const br = bi? bi.rarity : (comboResults.includes(b)? 'Combo' : '');
+      
+      // Sort by rarity first (rarest to most common)
+      if(rarityOrder[ar] !== rarityOrder[br]) {
+        return rarityOrder[ar] - rarityOrder[br];
+      }
+      
+      // Then by obtained status (obtained first)
       const oa = state.foodDex.has(a)?0:1;
       const ob = state.foodDex.has(b)?0:1;
-      if(oa!==ob) return oa-ob;
-      if(order[ar]!==order[br]) return order[ar]-order[br];
+      if(oa !== ob) return oa - ob;
+      
+      // Finally by name
       return a.localeCompare(b);
     });
   }
@@ -1820,6 +2193,9 @@ function renderQuick(){
   if(leaderboardDiv) {
     leaderboardDiv.innerHTML = displayLocalLeaderboard();
   }
+  
+  // 🏆 REACTION LEADERBOARD DISPLAY
+  renderReactionLeaderboard();
   
   const inv = Object.entries(state.inventory).sort((a,b)=>b[1]-a[1]).slice(0,12);
   document.getElementById('quickInv').innerHTML = inv.length? inv.map(x=>`${x[1]}× ${x[0]}`).join('<br>') : '(empty)';
@@ -2245,500 +2621,416 @@ window.addEventListener('load', ()=>{
 /* expose debug */
 window._state = ()=> state;
 window._forceAdd = (n)=>{ state.inventory[n]=(state.inventory[n]||0)+1; state.foodDex.add(n); if(!state.firstObtainedAt[n]) state.firstObtainedAt[n]=nowISO(); log('[DEV] forced '+n); saveState(); renderAll(); }
+
+/* ============================
+   THUNDER REWARD SYSTEM
+   ============================ */
+// Helper function to generate random emojis
+const emojis = ['⚡', '🌩️', '🌪️', '🔥', '🌈', '☁️'];
+
+// Function to trigger the thunder reward system
+function triggerThunderReward() {
+  document.body.classList.add('thunder-bg');
+  
+  // Create thunder aura
+  const thunderAura = document.createElement('div');
+  thunderAura.classList.add('thunder-aura');
+  document.body.appendChild(thunderAura);
+
+  // Create random flashing thunder effect
+  const thunderFlash = document.createElement('div');
+  thunderFlash.classList.add('thunder-flash');
+  document.body.appendChild(thunderFlash);
+
+  setTimeout(() => {
+    thunderFlash.classList.add('active');
+    setTimeout(() => {
+      thunderFlash.classList.remove('active');
+    }, 150);
+  }, 1000);
+
+  // Create random emoji clouds
+  for (let i = 0; i < 5; i++) {
+    const cloud = document.createElement('div');
+    cloud.classList.add('thunder-cloud-emoji');
+    cloud.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    cloud.style.left = `${Math.random() * 100}vw`;
+    cloud.style.top = `${Math.random() * 100}vh`;
+    document.body.appendChild(cloud);
+
+    // Animate the cloud
+    cloud.style.animationDuration = `${Math.random() * 5 + 10}s`; // Random duration for the rise
+  }
+
+  // Remove elements after the storm effect is complete
+  setTimeout(() => {
+    thunderAura.remove();
+    document.querySelectorAll('.thunder-cloud-emoji').forEach(cloud => cloud.remove());
+  }, 8000); // Remove everything after 8 seconds
+}
+
+// Random trigger with 0.1% chance every 3 seconds
+setInterval(() => {
+  if (Math.random() < 0.001) { // 0.1% chance
+    triggerThunderReward();
+  }
+}, 3000); // Check every 3 seconds
+
+// Quick access button to manually trigger thunder reward
+document.getElementById('thunderRewardBtn') && document.getElementById('thunderRewardBtn').addEventListener('click', triggerThunderReward);
+
+/* ============================
+   ULTIMATE SETTINGS SYSTEM
+   ============================ */
+function initializeSettingsUI() {
+  // Load current settings into UI controls
+  const settings = state.settings;
+  
+  // 1. General Settings
+  document.getElementById('soundEnabled').checked = settings.soundEnabled;
+  document.getElementById('musicEnabled').checked = settings.musicEnabled;
+  document.getElementById('animationsEnabled').checked = settings.animationsEnabled;
+  document.getElementById('soundVolume').value = settings.soundVolume;
+  document.getElementById('musicVolume').value = settings.musicVolume;
+  document.getElementById('uiScale').value = settings.uiScale;
+  document.getElementById('uiScaleValue').textContent = settings.uiScale + '%';
+  
+  // 2. Mobile Mode
+  document.getElementById('mobileMode').checked = settings.mobileMode;
+  document.getElementById('oneHandMode').value = settings.oneHandMode;
+  document.getElementById('swipeNavigation').checked = settings.swipeNavigation;
+  document.getElementById('compactDexMode').checked = settings.compactDexMode;
+  document.getElementById('offlineCaching').checked = settings.offlineCaching;
+  
+  // 3. Offline Mode
+  document.getElementById('offlineRolls').checked = settings.offlineRolls;
+  document.getElementById('offlineAchievements').checked = settings.offlineAchievements;
+  document.getElementById('offlineDexAccess').checked = settings.offlineDexAccess;
+  document.getElementById('emergencyFridgeEnabled').checked = settings.emergencyFridgeEnabled;
+  document.getElementById('autoSync').checked = settings.autoSync;
+  
+  // 4. Customization
+  document.getElementById('backgroundTheme').value = settings.backgroundTheme;
+  document.getElementById('themeMode').value = settings.themeMode;
+  document.getElementById('floatingEmojis').checked = settings.floatingEmojis;
+  document.getElementById('dexLayout').value = settings.dexLayout;
+  document.getElementById('foodVariants').checked = settings.foodVariants;
+  
+  // 5. Performance
+  document.getElementById('lowPowerMode').checked = settings.lowPowerMode;
+  document.getElementById('dataSaver').checked = settings.dataSaver;
+  document.getElementById('fpsLimit').value = settings.fpsLimit;
+  document.getElementById('autoSaveInterval').value = settings.autoSaveInterval;
+  document.getElementById('autoSaveValue').textContent = settings.autoSaveInterval + 's';
+  
+  // 6. Extra Fun
+  document.getElementById('dailyLoginRewards').checked = settings.dailyLoginRewards;
+  document.getElementById('miniGamesEnabled').checked = settings.miniGamesEnabled;
+  document.getElementById('experimentalFeatures').checked = settings.experimentalFeatures;
+  document.getElementById('mysteryBackgroundMode').checked = settings.mysteryBackgroundMode;
+  document.getElementById('hiddenCodesEnabled').checked = settings.hiddenCodesEnabled;
+  
+  // Add event listeners for live updates
+  addSettingsEventListeners();
+  
+  // Apply current settings
+  applyAllSettings();
+}
+
+function addSettingsEventListeners() {
+  // UI Scale slider with live preview
+  document.getElementById('uiScale').addEventListener('input', (e) => {
+    const value = e.target.value;
+    document.getElementById('uiScaleValue').textContent = value + '%';
+    state.settings.uiScale = parseInt(value);
+    applyUIScale();
+    saveState();
+  });
+  
+  // Auto Save slider with live preview
+  document.getElementById('autoSaveInterval').addEventListener('input', (e) => {
+    const value = e.target.value;
+    document.getElementById('autoSaveValue').textContent = value + 's';
+    state.settings.autoSaveInterval = parseInt(value);
+    saveState();
+  });
+  
+  // All checkboxes and selects
+  const settingsElements = [
+    'soundEnabled', 'musicEnabled', 'animationsEnabled', 'soundVolume', 'musicVolume',
+    'mobileMode', 'oneHandMode', 'swipeNavigation', 'compactDexMode', 'offlineCaching',
+    'offlineRolls', 'offlineAchievements', 'offlineDexAccess', 'emergencyFridgeEnabled', 'autoSync',
+    'backgroundTheme', 'themeMode', 'floatingEmojis', 'dexLayout', 'foodVariants',
+    'lowPowerMode', 'dataSaver', 'fpsLimit', 
+    'dailyLoginRewards', 'miniGamesEnabled', 'experimentalFeatures', 'mysteryBackgroundMode', 'hiddenCodesEnabled'
+  ];
+  
+  settingsElements.forEach(id => {
+    const element = document.getElementById(id);
+    if(!element) return;
+    
+    element.addEventListener('change', () => {
+      const settingKey = id;
+      if(element.type === 'checkbox') {
+        state.settings[settingKey] = element.checked;
+      } else if(element.type === 'range' || element.tagName === 'SELECT') {
+        const value = element.type === 'range' ? parseInt(element.value) : element.value;
+        state.settings[settingKey] = value;
+      }
+      
+      // Apply specific settings immediately
+      applySettingChange(settingKey);
+      saveState();
+      log(`⚙️ ${settingKey} updated!`, 'rare');
+    });
+  });
+  
+  // Save/Reset buttons
+  document.getElementById('saveSettings').addEventListener('click', () => {
+    saveState();
+    log('💾 Settings saved successfully!', 'legendary');
+    createConfetti(40);
+  });
+  
+  document.getElementById('resetSettings').addEventListener('click', () => {
+    if(confirm('Reset all settings to defaults? This cannot be undone!')) {
+      resetSettingsToDefaults();
+      initializeSettingsUI();
+      saveState();
+      log('🔄 Settings reset to defaults!', 'legendary');
+    }
+  });
+}
+
+function applyAllSettings() {
+  const settings = state.settings;
+  
+  // Apply UI Scale
+  applyUIScale();
+  
+  // Apply Theme
+  applyThemeMode();
+  
+  // Apply Mobile Mode
+  if(settings.mobileMode) {
+    document.body.classList.add('mobile-mode');
+    applyOneHandMode();
+  } else {
+    document.body.classList.remove('mobile-mode');
+  }
+  
+  // Apply Low Power Mode
+  if(settings.lowPowerMode) {
+    document.body.classList.add('low-power-mode');
+  } else {
+    document.body.classList.remove('low-power-mode');
+  }
+  
+  // Apply Background Theme
+  applyBackgroundTheme();
+}
+
+function applyUIScale() {
+  const scale = state.settings.uiScale / 100;
+  document.documentElement.style.fontSize = (16 * scale) + 'px';
+}
+
+function applyThemeMode() {
+  const theme = state.settings.themeMode;
+  document.body.classList.remove('light-theme', 'dark-theme');
+  
+  if(theme === 'light') {
+    document.body.classList.add('light-theme');
+  } else if(theme === 'dark') {
+    document.body.classList.add('dark-theme');
+  }
+  // 'auto' uses browser/system preference
+}
+
+function applyOneHandMode() {
+  const mode = state.settings.oneHandMode;
+  document.body.classList.remove('one-hand-left', 'one-hand-right', 'one-hand-center');
+  document.body.classList.add('one-hand-' + mode);
+}
+
+function applyBackgroundTheme() {
+  const theme = state.settings.backgroundTheme;
+  const themes = ['default', 'street-food', 'ramen-shop', 'dessert-cafe', 'buffet-hall', 'farmers-market', 'seaside', 'tokyo', 'fantasy-castle', 'food-lab', 'hidden-garden'];
+  
+  // Remove all theme classes
+  themes.forEach(t => document.body.classList.remove('bg-' + t));
+  
+  // Clear any existing theme elements
+  document.querySelectorAll('.gold-glitter, .bubble-layer, .thunder-aura, .thunder-flash, .neon-sign, .steam, .floating-pastry, .sparkle, .sunflower, .wave, .neon-glow, .floating-candle, .bubbling-tube, .falling-petal').forEach(el => el.remove());
+  
+  if(theme !== 'default') {
+    document.body.classList.add('bg-' + theme);
+    addThemeElements(theme);
+  }
+}
+
+function addThemeElements(theme) {
+  const area = document.getElementById('floatArea');
+  
+  switch(theme) {
+    case 'street-food':
+      // Add neon sign
+      const neon = document.createElement('div');
+      neon.className = 'neon-sign';
+      neon.textContent = 'FOOD GACHA';
+      document.body.appendChild(neon);
+      break;
+      
+    case 'ramen-shop':
+      // Add steam effects
+      for(let i = 0; i < 5; i++) {
+        const steam = document.createElement('div');
+        steam.className = 'steam';
+        steam.style.left = `${20 + i * 15}%`;
+        steam.style.bottom = '30%';
+        steam.style.width = `${20 + Math.random() * 30}px`;
+        steam.style.height = `${20 + Math.random() * 30}px`;
+        steam.style.animationDelay = `${i * 1.5}s`;
+        area.appendChild(steam);
+      }
+      break;
+      
+    case 'dessert-cafe':
+      // Add floating pastries
+      const pastries = ['🍰', '🧁', '🍮', '🍩', '🍪', '🥐'];
+      for(let i = 0; i < 8; i++) {
+        const pastry = document.createElement('div');
+        pastry.className = 'floating-pastry';
+        pastry.textContent = pastries[Math.floor(Math.random() * pastries.length)];
+        pastry.style.left = `${Math.random() * 100}%`;
+        pastry.style.animationDelay = `${Math.random() * 10}s`;
+        area.appendChild(pastry);
+      }
+      break;
+      
+    case 'buffet-hall':
+      // Add sparkle effects
+      for(let i = 0; i < 15; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = `${Math.random() * 100}%`;
+        sparkle.style.top = `${Math.random() * 100}%`;
+        sparkle.style.animationDelay = `${Math.random() * 3}s`;
+        area.appendChild(sparkle);
+      }
+      break;
+      
+    case 'farmers-market':
+      // Add sunflowers
+      for(let i = 0; i < 6; i++) {
+        const sunflower = document.createElement('div');
+        sunflower.className = 'sunflower';
+        sunflower.textContent = '🌻';
+        sunflower.style.left = `${10 + i * 15}%`;
+        sunflower.style.animationDelay = `${i * 0.5}s`;
+        area.appendChild(sunflower);
+      }
+      break;
+      
+    case 'seaside':
+      // Add waves
+      const wave = document.createElement('div');
+      wave.className = 'wave';
+      document.body.appendChild(wave);
+      break;
+      
+    case 'tokyo':
+      // Add neon glow text
+      const neonText = document.createElement('div');
+      neonText.className = 'neon-glow';
+      neonText.textContent = 'FOOD GACHA';
+      neonText.style.position = 'fixed';
+      neonText.style.top = '20px';
+      neonText.style.left = '50%';
+      neonText.style.transform = 'translateX(-50%)';
+      neonText.style.fontSize = '24px';
+      neonText.style.fontWeight = 'bold';
+      document.body.appendChild(neonText);
+      break;
+      
+    case 'fantasy-castle':
+      // Add floating candles
+      for(let i = 0; i < 8; i++) {
+        const candle = document.createElement('div');
+        candle.className = 'floating-candle';
+        candle.style.left = `${10 + i * 10}%`;
+        candle.style.animationDelay = `${i * 0.7}s`;
+        area.appendChild(candle);
+      }
+      break;
+      
+    case 'food-lab':
+      // Add bubbling tubes
+      for(let i = 0; i < 5; i++) {
+        const tube = document.createElement('div');
+        tube.className = 'bubbling-tube';
+        tube.style.left = `${15 + i * 15}%`;
+        tube.style.bottom = '20%';
+        tube.style.animationDelay = `${i * 0.8}s`;
+        area.appendChild(tube);
+      }
+      break;
+      
+    case 'hidden-garden':
+      // Add falling petals
+      for(let i = 0; i < 12; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'falling-petal';
+        petal.textContent = '🌸';
+        petal.style.left = `${Math.random() * 100}%`;
+        petal.style.animationDelay = `${Math.random() * 10}s`;
+        area.appendChild(petal);
+      }
+      break;
+  }
+}
+
+function resetSettingsToDefaults() {
+  state.settings = {
+    soundEnabled: true, musicEnabled: true, animationsEnabled: true,
+    soundVolume: 70, musicVolume: 50, uiScale: 100,
+    mobileMode: false, oneHandMode: 'center', swipeNavigation: false,
+    compactDexMode: false, offlineCaching: true,
+    offlineRolls: true, offlineAchievements: true, offlineDexAccess: true,
+    emergencyFridgeEnabled: true, autoSync: true,
+    backgroundTheme: 'default', themeMode: 'auto', floatingEmojis: true,
+    dexLayout: 'grid', foodVariants: true,
+    lowPowerMode: false, dataSaver: false, fpsLimit: 60, autoSaveInterval: 30,
+    dailyLoginRewards: true, miniGamesEnabled: true, experimentalFeatures: false,
+    mysteryBackgroundMode: false, hiddenCodesEnabled: true
+  };
+}
+
+// Initialize settings when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initializeSettingsUI, 100);
+  
+  // 🧊 Emergency Fridge button event listener
+  document.getElementById('rollEmergencyFridge').addEventListener('click', rollEmergencyFridge);
+  
+  // 🎮 Mini-game button event listener
+  document.getElementById('playMiniGame').addEventListener('click', showMiniGame);
+  
+  // 🌐 Offline status detection
+  setInterval(detectOfflineStatus, 5000); // Check every 5 seconds
+  window.addEventListener('online', detectOfflineStatus);
+  window.addEventListener('offline', detectOfflineStatus);
+  
+  // 🏆 Update leaderboard on significant achievements
+  setInterval(() => {
+    if(state.pulls > 0 && state.pulls % 50 === 0) {
+      updateLocalLeaderboard();
+    }
+  }, 30000); // Check every 30 seconds
+  
+  // Initialize offline detection
+  setTimeout(detectOfflineStatus, 1000);
+});
 </script>
-</body>
-</html>
-
-
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Food Game — All In One</title>
-    <style>
-        /* --- Base Styles --- */
-        * {
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #000;
-            --bg-overlay: 0.10;
-            --fg: #fff;
-            --card-bg: rgba(0, 0, 0, 0.75);
-            --accent: #fff;
-            --muted: rgba(255, 255, 255, 0.06);
-            --panel-w: 360px;
-            --glass: rgba(255, 255, 255, 0.03);
-            --ui-scale: 1;
-        }
-
-        body {
-            margin: 0;
-            font-family: Inter, Arial, Helvetica, sans-serif;
-            background: var(--bg);
-            color: var(--fg);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 12px;
-            overflow-x: hidden;
-            position: relative;
-            transform: scale(var(--ui-scale));
-        }
-
-        /* --- Thunder Reward Styles --- */
-        body.thunder-bg {
-            background: linear-gradient(180deg, #1a1a21 0%, #f7e640 100%);
-            overflow: hidden;
-        }
-
-        .thunder-aura {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1;
-            background: radial-gradient(circle at 50% 60%, rgba(255, 255, 80, 0.14), transparent 100%);
-            mix-blend-mode: screen;
-        }
-
-        .thunder-flash {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 2;
-            background: linear-gradient(180deg, rgba(255, 255, 80, 0.33) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.18s;
-        }
-
-        .thunder-cloud-emoji {
-            position: fixed;
-            z-index: 3;
-            font-size: 64px;
-            opacity: 0.85;
-            pointer-events: none;
-            filter: blur(0.5px) drop-shadow(0 6px 32px #000a);
-            animation: cloud-move 14s linear forwards;
-        }
-
-        @keyframes cloud-move {
-            0% {
-                opacity: 0;
-                transform: translateY(0) scale(0.82);
-            }
-            6% {
-                opacity: 0.85;
-            }
-            80% {
-                opacity: 0.85;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(16vh) scale(1.02);
-            }
-        }
-
-        .thunder-flash.active {
-            opacity: 1;
-        }
-
-        .thunder-clouds {
-            animation: rise 15s linear infinite;
-        }
-
-        @keyframes rise {
-            0% {
-                transform: translateY(80vh) scale(0.6);
-                opacity: 0;
-            }
-            30% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-40vh) scale(1.2);
-                opacity: 0;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div id="bgOverlay"></div>
-    <div id="floatArea"></div>
-    <div id="app">
-        <h1>Ultimate Food Game — All In One</h1>
-        <button id="thunderRewardBtn">Activate Thunder Reward</button>
-    </div>
-
-    <script>
-        // Helper function to generate random emojis
-        const emojis = ['⚡', '🌩️', '🌪️', '🔥', '🌈', '☁️'];
-        
-        // Function to trigger the thunder reward system
-        function triggerThunderReward() {
-            document.body.classList.add('thunder-bg');
-            
-            // Create thunder aura
-            const thunderAura = document.createElement('div');
-            thunderAura.classList.add('thunder-aura');
-            document.body.appendChild(thunderAura);
-
-            // Create random flashing thunder effect
-            const thunderFlash = document.createElement('div');
-            thunderFlash.classList.add('thunder-flash');
-            document.body.appendChild(thunderFlash);
-
-            setTimeout(() => {
-                thunderFlash.classList.add('active');
-                setTimeout(() => {
-                    thunderFlash.classList.remove('active');
-                }, 150);
-            }, 1000);
-
-            // Create random emoji clouds
-            for (let i = 0; i < 5; i++) {
-                const cloud = document.createElement('div');
-                cloud.classList.add('thunder-cloud-emoji');
-                cloud.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                cloud.style.left = `${Math.random() * 100}vw`;
-                cloud.style.top = `${Math.random() * 100}vh`;
-                document.body.appendChild(cloud);
-
-                // Animate the cloud
-                cloud.style.animationDuration = `${Math.random() * 5 + 10}s`; // Random duration for the rise
-            }
-
-            // Remove elements after the storm effect is complete
-            setTimeout(() => {
-                thunderAura.remove();
-                document.querySelectorAll('.thunder-cloud-emoji').forEach(cloud => cloud.remove());
-            }, 8000); // Remove everything after 8 seconds
-        }
-
-        // Random trigger with 0.1% chance every 3 seconds
-        setInterval(() => {
-            if (Math.random() < 0.001) { // 0.1% chance
-                triggerThunderReward();
-            }
-        }, 3000); // Check every 3 seconds
-
-        // Quick access button to manually trigger thunder reward
-        document.getElementById('thunderRewardBtn') && document.getElementById('thunderRewardBtn').addEventListener('click', triggerThunderReward);
-
-        // ⚙️ ULTIMATE SETTINGS SYSTEM JAVASCRIPT
-        function initializeSettingsUI() {
-          // Load current settings into UI controls
-          const settings = state.settings;
-          
-          // 1. General Settings
-          document.getElementById('soundEnabled').checked = settings.soundEnabled;
-          document.getElementById('musicEnabled').checked = settings.musicEnabled;
-          document.getElementById('animationsEnabled').checked = settings.animationsEnabled;
-          document.getElementById('soundVolume').value = settings.soundVolume;
-          document.getElementById('musicVolume').value = settings.musicVolume;
-          document.getElementById('uiScale').value = settings.uiScale;
-          document.getElementById('uiScaleValue').textContent = settings.uiScale + '%';
-          
-          // 2. Mobile Mode
-          document.getElementById('mobileMode').checked = settings.mobileMode;
-          document.getElementById('oneHandMode').value = settings.oneHandMode;
-          document.getElementById('swipeNavigation').checked = settings.swipeNavigation;
-          document.getElementById('compactDexMode').checked = settings.compactDexMode;
-          document.getElementById('offlineCaching').checked = settings.offlineCaching;
-          
-          // 3. Offline Mode
-          document.getElementById('offlineRolls').checked = settings.offlineRolls;
-          document.getElementById('offlineAchievements').checked = settings.offlineAchievements;
-          document.getElementById('offlineDexAccess').checked = settings.offlineDexAccess;
-          document.getElementById('emergencyFridgeEnabled').checked = settings.emergencyFridgeEnabled;
-          document.getElementById('autoSync').checked = settings.autoSync;
-          
-          // 4. Customization
-          document.getElementById('backgroundTheme').value = settings.backgroundTheme;
-          document.getElementById('themeMode').value = settings.themeMode;
-          document.getElementById('floatingEmojis').checked = settings.floatingEmojis;
-          document.getElementById('dexLayout').value = settings.dexLayout;
-          document.getElementById('foodVariants').checked = settings.foodVariants;
-          
-          // 5. Performance
-          document.getElementById('lowPowerMode').checked = settings.lowPowerMode;
-          document.getElementById('dataSaver').checked = settings.dataSaver;
-          document.getElementById('fpsLimit').value = settings.fpsLimit;
-          document.getElementById('autoSaveInterval').value = settings.autoSaveInterval;
-          document.getElementById('autoSaveValue').textContent = settings.autoSaveInterval + 's';
-          
-          // 6. Extra Fun
-          document.getElementById('dailyLoginRewards').checked = settings.dailyLoginRewards;
-          document.getElementById('miniGamesEnabled').checked = settings.miniGamesEnabled;
-          document.getElementById('experimentalFeatures').checked = settings.experimentalFeatures;
-          document.getElementById('mysteryBackgroundMode').checked = settings.mysteryBackgroundMode;
-          document.getElementById('hiddenCodesEnabled').checked = settings.hiddenCodesEnabled;
-          
-          // Add event listeners for live updates
-          addSettingsEventListeners();
-          
-          // Apply current settings
-          applyAllSettings();
-        }
-
-        function addSettingsEventListeners() {
-          // UI Scale slider with live preview
-          document.getElementById('uiScale').addEventListener('input', (e) => {
-            const value = e.target.value;
-            document.getElementById('uiScaleValue').textContent = value + '%';
-            state.settings.uiScale = parseInt(value);
-            applyUIScale();
-            saveState();
-          });
-          
-          // Auto Save slider with live preview
-          document.getElementById('autoSaveInterval').addEventListener('input', (e) => {
-            const value = e.target.value;
-            document.getElementById('autoSaveValue').textContent = value + 's';
-            state.settings.autoSaveInterval = parseInt(value);
-            saveState();
-          });
-          
-          // All checkboxes and selects
-          const settingsElements = [
-            'soundEnabled', 'musicEnabled', 'animationsEnabled', 'soundVolume', 'musicVolume',
-            'mobileMode', 'oneHandMode', 'swipeNavigation', 'compactDexMode', 'offlineCaching',
-            'offlineRolls', 'offlineAchievements', 'offlineDexAccess', 'emergencyFridgeEnabled', 'autoSync',
-            'backgroundTheme', 'themeMode', 'floatingEmojis', 'dexLayout', 'foodVariants',
-            'lowPowerMode', 'dataSaver', 'fpsLimit', 
-            'dailyLoginRewards', 'miniGamesEnabled', 'experimentalFeatures', 'mysteryBackgroundMode', 'hiddenCodesEnabled'
-          ];
-          
-          settingsElements.forEach(id => {
-            const element = document.getElementById(id);
-            if(!element) return;
-            
-            element.addEventListener('change', () => {
-              const settingKey = id;
-              if(element.type === 'checkbox') {
-                state.settings[settingKey] = element.checked;
-              } else if(element.type === 'range' || element.tagName === 'SELECT') {
-                const value = element.type === 'range' ? parseInt(element.value) : element.value;
-                state.settings[settingKey] = value;
-              }
-              
-              // Apply specific settings immediately
-              applySettingChange(settingKey);
-              saveState();
-              log(`⚙️ ${settingKey} updated!`, 'rare');
-            });
-          });
-          
-          // Save/Reset buttons
-          document.getElementById('saveSettings').addEventListener('click', () => {
-            saveState();
-            log('💾 Settings saved successfully!', 'legendary');
-            createConfetti(40);
-          });
-          
-          document.getElementById('resetSettings').addEventListener('click', () => {
-            if(confirm('Reset all settings to defaults? This cannot be undone!')) {
-              resetSettingsToDefaults();
-              initializeSettingsUI();
-              saveState();
-              log('🔄 Settings reset to defaults!', 'legendary');
-            }
-          });
-        }
-
-        function applyAllSettings() {
-          const settings = state.settings;
-          
-          // Apply UI Scale
-          applyUIScale();
-          
-          // Apply Theme
-          applyThemeMode();
-          
-          // Apply Mobile Mode
-          if(settings.mobileMode) {
-            document.body.classList.add('mobile-mode');
-            applyOneHandMode();
-          } else {
-            document.body.classList.remove('mobile-mode');
-          }
-          
-          // Apply Low Power Mode
-          if(settings.lowPowerMode) {
-            document.body.classList.add('low-power-mode');
-          } else {
-            document.body.classList.remove('low-power-mode');
-          }
-          
-          // Apply Background Theme
-          applyBackgroundTheme();
-        }
-
-        function applyUIScale() {
-          const scale = state.settings.uiScale / 100;
-          document.documentElement.style.fontSize = (16 * scale) + 'px';
-        }
-
-        function applyThemeMode() {
-          const theme = state.settings.themeMode;
-          document.body.classList.remove('light-theme', 'dark-theme');
-          
-          if(theme === 'light') {
-            document.body.classList.add('light-theme');
-          } else if(theme === 'dark') {
-            document.body.classList.add('dark-theme');
-          }
-          // 'auto' uses browser/system preference
-        }
-
-        function applyOneHandMode() {
-          const mode = state.settings.oneHandMode;
-          document.body.classList.remove('one-hand-left', 'one-hand-right', 'one-hand-center');
-          document.body.classList.add('one-hand-' + mode);
-        }
-
-        function applyBackgroundTheme() {
-          const theme = state.settings.backgroundTheme;
-          const themes = ['default', 'golden', 'thunder', 'aurora', 'bubbles', 'starfield', 'particles'];
-          
-          // Remove all theme classes and glitter elements
-          themes.forEach(t => document.body.classList.remove('bg-' + t));
-          document.querySelectorAll('.gold-glitter, .bubble-layer').forEach(el => el.remove());
-          
-          // Mystery background mode takes priority
-          if(state.settings.mysteryBackgroundMode) {
-            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-            if(randomTheme !== 'default') {
-              document.body.classList.add('bg-' + randomTheme);
-              addThemeElements(randomTheme);
-            }
-            log('🎲 Mystery background: ' + randomTheme, 'rare');
-          } else if(theme !== 'default') {
-            // Add selected theme
-            document.body.classList.add('bg-' + theme);
-            addThemeElements(theme);
-          }
-        }
-
-        function addThemeElements(theme) {
-          if(theme === 'golden') {
-            // Add golden glitter effect
-            const glitter = document.createElement('div');
-            glitter.className = 'gold-glitter';
-            document.body.appendChild(glitter);
-          } else if(theme === 'bubbles') {
-            // Add bubble layer for animated bubbles
-            const bubbleLayer = document.createElement('div');
-            bubbleLayer.className = 'bubble-layer';
-            document.body.appendChild(bubbleLayer);
-            
-            // Spawn animated bubbles
-            setInterval(() => {
-              if(document.querySelector('.bg-bubbles')) {
-                createBubble(bubbleLayer);
-              }
-            }, 800);
-          }
-        }
-
-        function createBubble(container) {
-          const bubble = document.createElement('div');
-          const size = 10 + Math.random() * 40;
-          bubble.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), rgba(135,206,250,0.05));
-            bottom: -50px;
-            left: ${Math.random() * 100}vw;
-            animation: bubbleFloat ${8 + Math.random() * 10}s linear forwards;
-          `;
-          
-          const style = document.createElement('style');
-          style.textContent = `
-            @keyframes bubbleFloat {
-              to { transform: translateY(-${window.innerHeight + 100}px); opacity: 0; }
-            }
-          `;
-          document.head.appendChild(style);
-          
-          container.appendChild(bubble);
-          setTimeout(() => bubble.remove(), 20000);
-        }
-
-        function applySettingChange(settingKey) {
-          // Apply specific setting changes immediately
-          switch(settingKey) {
-            case 'uiScale':
-              applyUIScale();
-              break;
-            case 'themeMode':
-              applyThemeMode();
-              break;
-            case 'mobileMode':
-              location.reload(); // Full refresh for mobile mode
-              break;
-            case 'oneHandMode':
-              applyOneHandMode();
-              break;
-            case 'backgroundTheme':
-            case 'mysteryBackgroundMode':
-              applyBackgroundTheme();
-              break;
-            case 'lowPowerMode':
-              if(state.settings.lowPowerMode) {
-                document.body.classList.add('low-power-mode');
-              } else {
-                document.body.classList.remove('low-power-mode');
-              }
-              break;
-          }
-        }
-
-        function resetSettingsToDefaults() {
-          state.settings = {
-            soundEnabled: true, musicEnabled: true, animationsEnabled: true,
-            soundVolume: 70, musicVolume: 50, uiScale: 100,
-            mobileMode: false, oneHandMode: 'center', swipeNavigation: false,
-            compactDexMode: false, offlineCaching: true,
-            offlineRolls: true, offlineAchievements: true, offlineDexAccess: true,
-            emergencyFridgeEnabled: true, autoSync: true,
-            backgroundTheme: 'default', themeMode: 'auto', floatingEmojis: true,
-            dexLayout: 'grid', foodVariants: true,
-            lowPowerMode: false, dataSaver: false, fpsLimit: 60, autoSaveInterval: 30,
-            dailyLoginRewards: true, miniGamesEnabled: true, experimentalFeatures: false,
-            mysteryBackgroundMode: false, hiddenCodesEnabled: true
-          };
-        }
-
-        // Initialize settings when DOM is ready
-        document.addEventListener('DOMContentLoaded', () => {
-          setTimeout(initializeSettingsUI, 100);
-          
-          // 🧊 Emergency Fridge button event listener
-          document.getElementById('rollEmergencyFridge').addEventListener('click', rollEmergencyFridge);
-          
-          // 🎮 Mini-game button event listener
-          document.getElementById('playMiniGame').addEventListener('click', showMiniGame);
-          
-          // 🌐 Offline status detection
-          setInterval(detectOfflineStatus, 5000); // Check every 5 seconds
-          window.addEventListener('online', detectOfflineStatus);
-          window.addEventListener('offline', detectOfflineStatus);
-          
-          // 🏆 Update leaderboard on significant achievements
-          setInterval(() => {
-            if(state.pulls > 0 && state.pulls % 50 === 0) {
-              updateLocalLeaderboard();
-            }
-          }, 30000); // Check every 30 seconds
-          
-          // Initialize offline detection
-          setTimeout(detectOfflineStatus, 1000);
-        });
-    </script>
 </body>
 </html>
